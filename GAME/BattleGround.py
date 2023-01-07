@@ -1,27 +1,41 @@
 import os
 import sys
 import csv
+from Statics import *
 from Consts import *
 import pygame
 
-
+"""
+Класс для описания игрового поял в целом
+"""
 class Board(pygame.sprite.Group):
     def __init__(self, file):
         super().__init__()
+        # отерываем csv файл, в котором описан уровень
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
         self.field = list()
+        # цикл по созданию поля из данных из файла
         for i in range(len(reader)):
             self.field.append(list())
             for j in range(len(reader[i])):
+                # self.field - двумерный список, в котором записаны все ячейки класса cells
+                # сделано, чтобы можно было быстрее обращаться и ориентироваться
                 self.field[i].append(Cell(self, reader[i][j], j * CELL_SIZE[0], i * CELL_SIZE[1]))
         self.drawWalls()
 
+    # процедура которая, после прорисовки пола, рисует стены
     def drawWalls(self):
         for i in range(len(self.field) - 1):
             for j in range(len(self.field[i])):
                 if self.field[i][j].ID == 0 and self.field[i + 1][j].ID != 0:
                     Wall(self, self.field[i][j].rect.x, self.field[i][j].rect.y)
+
+    def updateToRedPoint(self, point):
+        move_x, move_y = CENTER[0] - point[0], CENTER[1] - point[1]
+        for i in self.sprites():
+            i.rect.x += move_x
+            i.rect.y += move_y
 
 
 class Cell(pygame.sprite.Sprite):
@@ -43,12 +57,12 @@ class Cell(pygame.sprite.Sprite):
 class Wall(pygame.sprite.Sprite):
     def __init__(self, board, x, y):
         super().__init__(board)
-        self.image = load_image(f'cells/13.jpg')
+        self.image = load_image(f'cells/14.png')
         self.image = pygame.transform.scale(self.image, WALL_SIZE)
         self.rect = self.image.get_rect()
         self.rect.x = x
-        self.rect.y = y - WALL_SIZE[1] + CELL_SIZE[1]
-        #print(self.image.get_rect())
+        self.rect.y = y - WALL_SIZE[1] + 90 + CELL_SIZE[1]
+
 
 if __name__ == '__main__':
     pygame.init()
@@ -62,8 +76,10 @@ if __name__ == '__main__':
     screen.fill(BACKGROUND_COLOR)
 
     board = Board('l1.csv')
+    board.updateToRedPoint((300, 300))
     board.draw(screen)
     pygame.display.flip()
+
 
     while running:
         for event in pygame.event.get():
