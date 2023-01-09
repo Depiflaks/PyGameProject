@@ -18,7 +18,6 @@ def load_image(name, colorkey=None):
     return image
 
 
-if __name__ == '__main__':
-    all_sprites = pygame.sprite.Group()
-    player_data = [load_image("characters/idle.png"), [load_image("characters/up.png"), 1, 2],
-                   [load_image("characters/leftRight.png"), 2, 1]]
+all_sprites = pygame.sprite.Group()
+player_data = [pygame.image.load("../resources/img/characters/idle.png"), [pygame.image.load(f"../resources/img/characters/up.png"), 1, 2],
+               [pygame.image.load(f"../resources/img/characters/leftRight.png"), 2, 1]]

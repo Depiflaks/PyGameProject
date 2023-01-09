@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 from Statics import *
+from Character import Chrc
 from Consts import *
 import pygame
 
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     board = Board('l1.csv')
     board.updateToRedPoint((300, 300))
     board.draw(screen)
+
     pygame.display.flip()
 
 

@@ -7,7 +7,7 @@ class Chrc(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         super().__init__(all_sprites)
-        self.animations = []
+        self.animations = [data[0]]
         self.cut_sheet(data[1:])
         self.cur_frame = 0
         self.image = data[0]
@@ -30,9 +30,11 @@ class Chrc(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_a] or keys[pygame.K_d]):
             cur_frame = 0
-            anim = self.animations[1]
-        if (keys[pygame.K_w] or keys[pygame.K_s]):
+            anim = self.animations[2]
+        elif (keys[pygame.K_w] or keys[pygame.K_s]):
             cur_frame = 0
-            anim = self.animations[0]
+            anim = self.animations[1]
+        else:
+            anim = [self.animations[0]]
         self.cur_frame = (self.cur_frame + 1) % len(anim)
         self.image = anim[self.cur_frame]
