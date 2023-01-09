@@ -15,6 +15,8 @@ class Board(pygame.sprite.Group):
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
         self.field = list()
+        self.layerGroup = pygame.sprite.LayeredUpdates()
+
         # цикл по созданию поля из данных из файла
         for i in range(len(reader)):
             self.field.append(list())
@@ -22,6 +24,7 @@ class Board(pygame.sprite.Group):
                 # self.field - двумерный список, в котором записаны все ячейки класса cells
                 # сделано, чтобы можно было быстрее обращаться и ориентироваться
                 self.field[i].append(Cell(self, reader[i][j], j * CELL_SIZE[0], i * CELL_SIZE[1]))
+                self.layerGroup.add(self.fie )
         self.drawWalls()
 
     # процедура которая, после прорисовки пола, рисует стены
@@ -46,6 +49,12 @@ class Cell(pygame.sprite.Sprite):
             self.image = pygame.Surface((CELL_SIZE[0], CELL_SIZE[1]), pygame.SRCALPHA, 32)
             self.rect = pygame.Rect(x, y, CELL_SIZE[0], CELL_SIZE[1])
             pygame.draw.rect(self.image, BACKGROUND_COLOR, (0, 0, CELL_SIZE[0], CELL_SIZE[1]))
+        elif self.ID == 10 or self.ID == 11:
+            self.image = load_image(f'cells/{self.ID}.png')
+            self.image = pygame.transform.scale(self.image, DOOR_SIZE)
+            self.rect = self.image.get_rect()
+            self.rect.x = x
+            self.rect.y = y - DOOR_SIZE[1] + CELL_SIZE[1]
         else:
             self.image = load_image(f'cells/{self.ID}.jpg')
             self.image = pygame.transform.scale(self.image, CELL_SIZE)
@@ -75,11 +84,10 @@ if __name__ == '__main__':
 
     screen.fill(BACKGROUND_COLOR)
 
-    board = Board('l1.csv')
-    board.updateToRedPoint((300, 300))
+    board = Board('l2.csv')
+    #board.updateToRedPoint((300, 300))
     board.draw(screen)
     pygame.display.flip()
-
 
     while running:
         for event in pygame.event.get():
