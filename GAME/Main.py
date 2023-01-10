@@ -18,9 +18,10 @@ running = True
 
 screen.fill(BACKGROUND_COLOR)
 
-board = Board('l1.csv')
-chrc1 = Chrc(player_data, 100, 100)
+board = Board('l1/l1.csv')
+chrc1 = Chrc(player_data, 0, 0)
 board.add(chrc1, layer=CHARACTERS_LAYER)
+#board.updateToRedPoint((chrc1.x, chrc1.y))
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -30,7 +31,7 @@ while running:
         for chrc in characters:
             chrc1.updateState(event)
     characters.update()
-    #board.updateToRedPoint((chrc1.x, chrc1.y))
+    #board.updateToRedPoint((chrc1.x + PLAYER_SIZE[0] // 2, chrc1.y + PLAYER_SIZE[1] // 2))
     screen.fill(BACKGROUND_COLOR)
     board.draw(screen)
     # all_sprites.draw(screen)
