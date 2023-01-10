@@ -1,16 +1,17 @@
 from Consts import *
 from Statics import *
-import pygame
 
 class Chrc(pygame.sprite.Sprite):
     def __init__(self, data, x, y):
+        self.keys = pygame.key.get_pressed()
         self.x = x
         self.y = y
         super().__init__(all_sprites)
-        self.animations = [data[0]]
-        self.cut_sheet(data[1:])
+        self.animations = [[data[0]], [data[1]], [data[2]]]
+        self.cut_sheet(data[3:])
         self.cur_frame = 0
         self.image = data[0]
+        self.anim = self.animations[0]
         self.rect = self.rect.move(x, y)
 
     def cut_sheet(self, data):
@@ -26,15 +27,52 @@ class Chrc(pygame.sprite.Sprite):
                         frame_location, self.rect.size)))
             self.animations.append(self.frames)
 
-    def update(self, event):
-        keys = pygame.key.get_pressed()
-        if (keys[pygame.K_a] or keys[pygame.K_d]):
+    def updateState(self, event):
+        global ticks
+        self.keys = pygame.key.get_pressed()
+        if event.type == pygame.KEYDOWN:
+            if (event.key == pygame.K_a):
+                ticks = 0
+                cur_frame = 0
+                self.anim = self.animations[5]
+            elif (event.key == pygame.K_d):
+                ticks = 0
+                cur_frame = 0
+                self.anim = [pygame.transform.flip(el, True, False) for el in self.animations[5]]
+            elif (event.key == pygame.K_w):
+                ticks = 0
+                cur_frame = 0
+                self.anim = self.animations[3]
+            elif (event.key == pygame.K_s):
+                ticks = 0
+                cur_frame = 0
+                self.anim = self.animations[4]
+        if (event.type == pygame.KEYUP and not (self.keys[pygame.K_a] or self.keys[pygame.K_d] or self.keys[pygame.K_w] or self.keys[pygame.K_s])):
+            ticks = 0
             cur_frame = 0
-            anim = self.animations[2]
-        elif (keys[pygame.K_w] or keys[pygame.K_s]):
-            cur_frame = 0
-            anim = self.animations[1]
-        else:
-            anim = [self.animations[0]]
-        self.cur_frame = (self.cur_frame + 1) % len(anim)
-        self.image = anim[self.cur_frame]
+            if (event.key == pygame.K_w):
+                self.anim = self.animations[1]
+            if (event.key == pygame.K_a):
+                self.anim = self.animations[0]
+            if (event.key == pygame.K_d):
+                self.anim = [pygame.transform.flip(el, True, False) for el in self.animations[0]]
+            if (event.key == pygame.K_s):
+                self.anim = self.animations[2]
+
+    def update(self):
+        global ticks
+        self.keys = pygame.key.get_pressed()
+        if (self.keys[pygame.K_a]):
+            self.x -= SPEED / FPS
+        if (self.keys[pygame.K_d]):
+            self.x += SPEED / FPS
+        if (self.keys[pygame.K_w]):
+            self.y -= SPEED / FPS
+        if (self.keys[pygame.K_s]):
+            self.y += SPEED / FPS
+        if (ticks % (FPS // 4) == 0):
+            self.cur_frame = (self.cur_frame + 1) % len(self.anim)
+        self.rect = pygame.rect.Rect(self.x, self.y, self.rect[2], self.rect[3])
+        self.image = self.anim[self.cur_frame]
+        changeSize(self, PLAYER_SIZE)
+        ticks += 1

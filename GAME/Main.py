@@ -15,7 +15,6 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption('ToGetHer')
 
 running = True
-clock = pygame.time.Clock()
 
 screen.fill(BACKGROUND_COLOR)
 
@@ -24,17 +23,19 @@ chrc1 = Chrc(player_data, 100, 100)
 board.draw(screen)
 all_sprites.draw(screen)
 pygame.display.flip()
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             running = False
-        board.draw(screen)
-        all_sprites.update(event)
-        all_sprites.draw(screen)
-        clock.tick(FPS)
-        pygame.display.flip()
+        for chrc in all_sprites:
+            chrc1.updateState(event)
+    all_sprites.update()
+    screen.fill(BACKGROUND_COLOR)
+    board.draw(screen)
+    all_sprites.draw(screen)
+    pygame.display.flip()
+    clock.tick(FPS)
 
 pygame.quit()

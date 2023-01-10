@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+from Consts import *
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('..', 'resources', 'img', name)
@@ -18,6 +19,12 @@ def load_image(name, colorkey=None):
     return image
 
 
+def changeSize(obj, size):
+    obj.image = pygame.transform.scale(obj.image, size)
+    #obj.rect.y = obj.y - size[1] + CELL_SIZE[1]
+
+ticks = 0
+clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
-player_data = [pygame.image.load("../resources/img/characters/idle.png"), [pygame.image.load(f"../resources/img/characters/up.png"), 1, 2],
-               [pygame.image.load(f"../resources/img/characters/leftRight.png"), 2, 1]]
+player_data = [pygame.image.load("../resources/img/characters/idle.png"), pygame.image.load("../resources/img/characters/idleUp.png"), pygame.image.load("../resources/img/characters/idleDown.png"), [pygame.image.load("../resources/img/characters/up.png"), 1, 2],
+               [pygame.image.load("../resources/img/characters/down.png"), 1, 2], [pygame.image.load("../resources/img/characters/leftRight.png"), 2, 1]]
