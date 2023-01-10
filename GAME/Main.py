@@ -20,21 +20,19 @@ screen.fill(BACKGROUND_COLOR)
 
 board = Board('l1.csv')
 chrc1 = Chrc(player_data, 100, 100)
-board.draw(screen)
-all_sprites.draw(screen)
-pygame.display.flip()
+board.add(chrc1, layer=CHARACTERS_LAYER)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             running = False
-        for chrc in all_sprites:
+        for chrc in characters:
             chrc1.updateState(event)
-    all_sprites.update()
+    characters.update()
     screen.fill(BACKGROUND_COLOR)
     board.draw(screen)
-    all_sprites.draw(screen)
+    # all_sprites.draw(screen)
     pygame.display.flip()
     clock.tick(FPS)
 

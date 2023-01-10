@@ -25,6 +25,6 @@ def changeSize(obj, size):
 
 ticks = 0
 clock = pygame.time.Clock()
-all_sprites = pygame.sprite.Group()
+characters = pygame.sprite.Group()
 player_data = [pygame.image.load("../resources/img/characters/idle.png"), pygame.image.load("../resources/img/characters/idleUp.png"), pygame.image.load("../resources/img/characters/idleDown.png"), [pygame.image.load("../resources/img/characters/up.png"), 1, 2],
-               [pygame.image.load("../resources/img/characters/down.png"), 1, 2], [pygame.image.load("../resources/img/characters/leftRight.png"), 2, 1]]
+               [pygame.image.load("../resources/img/characters/down.png"), 1, 2], [pygame.image.load("../resources/img/characters/leftRight.png"), 4, 1]]
