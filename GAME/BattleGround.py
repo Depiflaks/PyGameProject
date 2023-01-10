@@ -18,8 +18,6 @@ class Board(pygame.sprite.LayeredUpdates):
             reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
         self.field = list()
         self.walls = list()
-
-
         # цикл по созданию поля из данных из файла
         for i in range(len(reader)):
             self.field.append(list())
@@ -35,7 +33,6 @@ class Board(pygame.sprite.LayeredUpdates):
             for j in range(len(self.field[i])):
                 if self.field[i][j].ID == 0 and self.field[i + 1][j].ID != 0:
                     self.walls.append(Wall(self, self.field[i][j].rect.x, self.field[i][j].rect.y))
-
 
     def updateToRedPoint(self, point):
         move_x, move_y = CENTER[0] - point[0], CENTER[1] - point[1]
@@ -103,7 +100,7 @@ if __name__ == '__main__':
 
     screen.fill(BACKGROUND_COLOR)
 
-    board = Board('l1.csv')
+    board = Board('l1/l1.csv')
     #board.updateToRedPoint((300, 300))
     board.draw(screen)
 

@@ -30,6 +30,7 @@ while running:
         for chrc in characters:
             chrc1.updateState(event)
     characters.update()
+    #board.updateToRedPoint((chrc1.x, chrc1.y))
     screen.fill(BACKGROUND_COLOR)
     board.draw(screen)
     # all_sprites.draw(screen)
