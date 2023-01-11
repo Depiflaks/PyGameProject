@@ -14,6 +14,7 @@ class Board(pygame.sprite.LayeredUpdates):
     def __init__(self, file):
         super().__init__()
         self.players_list = []
+        self.point = 0, 0
         # отерываем csv файл, в котором описан уровень
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
@@ -35,7 +36,9 @@ class Board(pygame.sprite.LayeredUpdates):
                 if self.field[i][j].ID == 0 and self.field[i + 1][j].ID != 0:
                     self.walls.append(Wall(self, self.field[i][j].rect.x, self.field[i][j].rect.y))
 
-    def updateToRedPoint(self, point):
+    def updateToRedPoint(self, point, flag=True):
+        if flag:
+            self.point = point
         move_x, move_y = CENTER[0] - point[0], CENTER[1] - point[1]
         for i in self.sprites():
             i.x += move_x
@@ -47,6 +50,7 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
             if i.cur_frame == 1:
                 i.image = i.frames[0]
+                i.cur_frame = 0
 
     def update(self):
         for i in self.players_list:
@@ -86,7 +90,7 @@ class Cell(pygame.sprite.Sprite):
             Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
             self.y -= DOOR_SIZE[1] - CELL_SIZE[1] + 10
-            board.change_layer(self, 5)
+            board.change_layer(self, 6)
         else:
             self.cutFrames(load_image(f'cells/{self.ID}.jpg'), self.frames_count)
             board.change_layer(self, 0 if self.ID == 0 else 1)
@@ -105,7 +109,8 @@ class Cell(pygame.sprite.Sprite):
             self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
     def update(self):
-        obj = pygame.sprite.spritecollide(self, self.board)
+        #obj = pygame.sprite.spritecollide(self, self.board)
+        pass
 
 
 
@@ -113,12 +118,13 @@ class Wall(pygame.sprite.Sprite):
     def __init__(self, board, x, y):
         super().__init__(board)
         self.image = load_image(f'cells/21.png')
+        self.rect = self.image.get_rect()
         self.image = pygame.transform.scale(self.image, WALL_SIZE)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y - WALL_SIZE[1] + 90 + CELL_SIZE[1]
         self.rect.x = self.x
-        self.type = 4
+        self.type = 5
         self.rect.y = self.y
         board.change_layer(self, 2)
 

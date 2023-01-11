@@ -34,6 +34,14 @@ while running:
         for chrc in characters:
             chrc1.updateState(event)
             chrc2.updateState(event)
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
+            pygame.display.iconify()
+    if chrc1.y > chrc2.y:
+        board.change_layer(chrc2, 4)
+        board.change_layer(chrc1, 5)
+    else:
+        board.change_layer(chrc1, 4)
+        board.change_layer(chrc2, 5)
     characters.update()
     board.toStartForm()
     board.update()

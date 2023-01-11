@@ -7,6 +7,7 @@ class Chrc(pygame.sprite.Sprite):
     def __init__(self, data, row, column, board):
         self.ticks = 0
         self.board = board
+        self.type = 6
         super().__init__(characters)
         self.keyUp, self.keyDown, self.keyLeft, self.keyRight = data[3]
         self.animations = [[data[0]], [data[1]], [data[2]]]
@@ -18,7 +19,7 @@ class Chrc(pygame.sprite.Sprite):
         self.y = board.field[column][row].y - self.image.get_height() / 2 + 10
         changeSize(self, PLAYER_SIZE)
         self.rect = self.rect.move(self.x, self.y)
-        self.collider = pygame.rect.Rect(self.x + 70, self.y + PLAYER_SIZE[1] - 45, self.image.get_width() - 140, 30)
+        self.collider = pygame.rect.Rect(self.x + 45, self.y + PLAYER_SIZE[1] - 30, self.image.get_width() - 90, 25)
         board.appendPlayer(self)
 
     def cut_sheet(self, data):
@@ -105,19 +106,46 @@ class Chrc(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if (keys[self.keyLeft]):
             self.x -= SPEED / FPS
+            self.x -= SPEED / FPS / 2
+            self.collider.x = self.x + 45
+            self.collider.y = self.y + PLAYER_SIZE[1] - 30
+            if not self.canMove():
+                self.x += SPEED / FPS
+            self.x += SPEED / FPS / 2
         if (keys[self.keyRight]):
             self.x += SPEED / FPS
+            self.x += SPEED / FPS / 2
+            self.collider.x = self.x + 45
+            self.collider.y = self.y + PLAYER_SIZE[1] - 30
+            if not self.canMove():
+                self.x -= SPEED / FPS
+            self.x -= SPEED / FPS / 2
         if (keys[self.keyUp]):
             self.y -= SPEED / FPS
+            self.y -= SPEED / FPS / 2
+            self.collider.x = self.x + 45
+            self.collider.y = self.y + PLAYER_SIZE[1] - 30
+            if not self.canMove():
+                self.y += SPEED / FPS
+            self.y += SPEED / FPS / 2
+            print(self.y)
         if (keys[self.keyDown]):
             self.y += SPEED / FPS
+            self.y += SPEED / FPS / 2
+            self.collider.x = self.x + 45
+            self.collider.y = self.y + PLAYER_SIZE[1] - 30
+            if not self.canMove():
+                self.y -= SPEED / FPS
+            self.y -= SPEED / FPS / 2
         if (self.ticks % (FPS // 6) == 0):
             self.cur_frame = (self.cur_frame + 1) % len(self.anim)
         self.rect.x = self.x
         self.rect.y = self.y
         self.image = self.anim[self.cur_frame]
         changeSize(self, PLAYER_SIZE)
-        self.collider = pygame.rect.Rect(self.x + 70, self.y + PLAYER_SIZE[1] - 45, self.image.get_width() - 140, 30)
-        self.collider.x = self.x + 70
-        self.collider.y = self.y + PLAYER_SIZE[1] - 45
+        self.collider.x = self.x + 45
+        self.collider.y = self.y + PLAYER_SIZE[1] - 30
         self.ticks += 1
+
+    def canMove(self):
+        return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0))])
