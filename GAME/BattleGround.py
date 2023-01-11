@@ -11,8 +11,9 @@ import pygame
 Класс для описания игрового поял в целом
 """
 class Board(pygame.sprite.LayeredUpdates):
-    def __init__(self, file):
+    def __init__(self, file, players):
         super().__init__()
+        self.players_list = players
         # отерываем csv файл, в котором описан уровень
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
@@ -42,18 +43,27 @@ class Board(pygame.sprite.LayeredUpdates):
             i.rect.x = i.x
             i.rect.y = i.y
 
+    def update(self):
+        for i in self.players_list:
+            obj = pygame.sprite.spritecollide(i, self, False)
+            for j in obj:
+                if j.__class__ == Cell and j.type == 2:
+                    j.image = j.frames[1]
 
 
 class Cell(pygame.sprite.Sprite):
     def __init__(self, board, ID, x, y):
         super().__init__(board)
+        self.board = board
         self.frames = []
         con = sqlite3.connect("../resources/id.db")
         try:
-            result = list(con.cursor().execute(f"""SELECT "Активная форма", "Тип" FROM ObjectID
+            result = list(con.cursor().execute(f"""SELECT "Активная форма", "Тип", "Объект" FROM ObjectID
                 WHERE ID = {ID} """).fetchall()[0])
         except:
-            result = [1, 4]
+            result = [1, 4, 0]
+        if result[2] != 0:
+            self.act_obj = result[2]
         self.type = result[1]
         self.frames_count = result[0]
         self.ID = ID
@@ -79,6 +89,10 @@ class Cell(pygame.sprite.Sprite):
             frame_location = (self.rect.w * i, 0)
             #print(frame_location, sheet.get_width(), sheet.get_height(), self.rect.size)
             self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
+
+    def update(self):
+        obj = pygame.sprite.spritecollide(self, self.board)
+
 
 
 class Wall(pygame.sprite.Sprite):
