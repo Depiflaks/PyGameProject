@@ -16,8 +16,9 @@ class Chrc(pygame.sprite.Sprite):
         self.anim = self.animations[0]
         self.x = board.field[column][row].x
         self.y = board.field[column][row].y - self.image.get_height() / 2 + 10
+        changeSize(self, PLAYER_SIZE)
         self.rect = self.rect.move(self.x, self.y)
-        self.collider = pygame.rect.Rect(self.x + 30, self.y + self.image.get_height() - 20, self.image.get_width() / 2, 20)
+        self.collider = pygame.rect.Rect(self.x + 70, self.y + PLAYER_SIZE[1] - 45, self.image.get_width() - 140, 30)
         board.appendPlayer(self)
 
     def cut_sheet(self, data):
@@ -112,12 +113,11 @@ class Chrc(pygame.sprite.Sprite):
             self.y += SPEED / FPS
         if (self.ticks % (FPS // 6) == 0):
             self.cur_frame = (self.cur_frame + 1) % len(self.anim)
-        self.rect = pygame.rect.Rect(self.x, self.y, self.rect[2], self.rect[3])
+        self.rect.x = self.x
+        self.rect.y = self.y
         self.image = self.anim[self.cur_frame]
         changeSize(self, PLAYER_SIZE)
+        self.collider = pygame.rect.Rect(self.x + 70, self.y + PLAYER_SIZE[1] - 45, self.image.get_width() - 140, 30)
+        self.collider.x = self.x + 70
+        self.collider.y = self.y + PLAYER_SIZE[1] - 45
         self.ticks += 1
-
-
-class Collider(pygame.sprite.Sprite):
-    def __init__(self):
-        pass

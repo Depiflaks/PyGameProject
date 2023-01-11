@@ -50,7 +50,7 @@ class Board(pygame.sprite.LayeredUpdates):
 
     def update(self):
         for i in self.players_list:
-            obj = pygame.sprite.spritecollide(i, self, False)
+            obj = [j for j in self if j.rect.colliderect(i.collider)]
             for j in obj:
                 if j.__class__ == Cell and j.type == 2:
                     j.cur_frame = 1
