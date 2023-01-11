@@ -17,7 +17,8 @@ class Chrc(pygame.sprite.Sprite):
         self.x = board.field[column][row].x
         self.y = board.field[column][row].y - self.image.get_height() / 2 + 10
         self.rect = self.rect.move(self.x, self.y)
-        self.collider = pygame.rect.Rect(self.x + 30, self.y + self.image.get_height() - 50, self.image.get_width() / 2, 50)
+        self.collider = pygame.rect.Rect(self.x + 30, self.y + self.image.get_height() - 20, self.image.get_width() / 2, 20)
+        board.appendPlayer(self)
 
     def cut_sheet(self, data):
         for el in data:

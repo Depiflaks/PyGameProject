@@ -43,12 +43,25 @@ class Board(pygame.sprite.LayeredUpdates):
             i.rect.x = i.x
             i.rect.y = i.y
 
+    def toStartForm(self):
+        for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
+            if i.cur_frame == 1:
+                i.image = i.frames[0]
+
     def update(self):
         for i in self.players_list:
             obj = pygame.sprite.spritecollide(i, self, False)
             for j in obj:
                 if j.__class__ == Cell and j.type == 2:
-                    j.image = j.frames[1]
+                    j.cur_frame = 1
+                    j.image = j.frames[j.cur_frame]
+                    for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj, self.sprites())):
+                        # print(1)
+                        m.cur_frame = 1
+                        m.image = m.frames[m.cur_frame]
+
+    def appendPlayer(self, player):
+        self.players_list.append(player)
 
 
 class Cell(pygame.sprite.Sprite):
@@ -72,12 +85,13 @@ class Cell(pygame.sprite.Sprite):
         if self.type == 3:
             Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
-            self.y -= DOOR_SIZE[1] - CELL_SIZE[1]
+            self.y -= DOOR_SIZE[1] - CELL_SIZE[1] + 10
             board.change_layer(self, 5)
         else:
             self.cutFrames(load_image(f'cells/{self.ID}.jpg'), self.frames_count)
             board.change_layer(self, 0 if self.ID == 0 else 1)
-        self.image = self.frames[0]
+        self.cur_frame = 0
+        self.image = self.frames[self.cur_frame]
         self.rect.x = self.x
         self.rect.y = self.y
 

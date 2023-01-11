@@ -18,8 +18,8 @@ running = True
 
 screen.fill(BACKGROUND_COLOR)
 
-board = Board('l1/l1.csv')
-spawnPositions = [list(map(int, el.split())) for el in open("../resources/levels/l1/chr.csv").read().strip().split("\n")]
+board = Board('l2/l2.csv')
+spawnPositions = [list(map(int, el.split())) for el in open("../resources/levels/l2/chr.csv").read().strip().split("\n")]
 chrc1 = Chrc(player_data1, *spawnPositions[0], board)
 chrc2 = Chrc(player_data2, *spawnPositions[1], board)
 board.add(chrc1, layer=CHARACTERS_LAYER)
@@ -35,6 +35,8 @@ while running:
             chrc1.updateState(event)
             chrc2.updateState(event)
     characters.update()
+    board.toStartForm()
+    board.update()
     board.updateToRedPoint(((chrc1.x + chrc2.x) / 2 + PLAYER_SIZE[0] / 2, (chrc1.y + chrc2.y) / 2 + PLAYER_SIZE[1] / 2))
     screen.fill(BACKGROUND_COLOR)
     board.draw(screen)
