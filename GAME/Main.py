@@ -18,9 +18,12 @@ running = True
 
 screen.fill(BACKGROUND_COLOR)
 
-board = Board('l2/l2.csv')
-chrc1 = Chrc(player_data, 500, 500)
+board = Board('l1/l1.csv')
+spawnPositions = [list(map(int, el.split())) for el in open("../resources/levels/l1/chr.csv").read().strip().split("\n")]
+chrc1 = Chrc(player_data1, *spawnPositions[0], board)
+chrc2 = Chrc(player_data2, *spawnPositions[1], board)
 board.add(chrc1, layer=CHARACTERS_LAYER)
+board.add(chrc2, layer=CHARACTERS_LAYER)
 #board.updateToRedPoint((chrc1.x, chrc1.y))
 while running:
     for event in pygame.event.get():
@@ -30,8 +33,9 @@ while running:
             running = False
         for chrc in characters:
             chrc1.updateState(event)
+            chrc2.updateState(event)
     characters.update()
-    board.updateToRedPoint((chrc1.x + PLAYER_SIZE[0] // 2, chrc1.y + PLAYER_SIZE[1] // 2))
+    board.updateToRedPoint(((chrc1.x + chrc2.x) / 2 + PLAYER_SIZE[0] / 2, (chrc1.y + chrc2.y) / 2 + PLAYER_SIZE[1] / 2))
     screen.fill(BACKGROUND_COLOR)
     board.draw(screen)
     # all_sprites.draw(screen)

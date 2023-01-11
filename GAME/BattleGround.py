@@ -11,9 +11,9 @@ import pygame
 Класс для описания игрового поял в целом
 """
 class Board(pygame.sprite.LayeredUpdates):
-    def __init__(self, file, players):
+    def __init__(self, file):
         super().__init__()
-        self.players_list = players
+        self.players_list = []
         # отерываем csv файл, в котором описан уровень
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
