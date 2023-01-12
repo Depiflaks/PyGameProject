@@ -6,6 +6,7 @@ from Statics import *
 class Chrc(pygame.sprite.Sprite):
     def __init__(self, data, row, column, board):
         self.ticks = 0
+        self.collided = True
         self.board = board
         self.type = 6
         super().__init__(characters)
@@ -119,7 +120,7 @@ class Chrc(pygame.sprite.Sprite):
         self.ticks += 1
 
     def canMove(self):
-        return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0))])
+        return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0)) and sprite.collided])
 
     def move(self, key, coord, znak):
         if (key):

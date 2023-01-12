@@ -11,10 +11,11 @@ import pygame
 Класс для описания игрового поял в целом
 """
 class Board(pygame.sprite.LayeredUpdates):
-    def __init__(self, file, pos, width, center):
+    def __init__(self, file, pos, width, center, offset):
         super().__init__()
         self.center = center
         self.x, self.y = pos
+        self.offset = offset
         self.width = width
         self.players_list = []
         # отерываем csv файл, в котором описан уровень
@@ -44,13 +45,13 @@ class Board(pygame.sprite.LayeredUpdates):
             i.x += move_x
             i.y += move_y
             if i.x > self.x + self.width:
-                self.collided = False
-                i.rect.x = self.x + self.width
+                i.collided = False
+                i.rect.x = i.x + self.offset
             elif i.x < self.x:
-                self.collided = False
-                i.rect.x = self.x
+                i.collided = False
+                i.rect.x = i.x - self.offset
             else:
-                self.collided = True
+                i.collided = True
                 i.rect.x = i.x
             i.rect.y = i.y
 
@@ -68,9 +69,18 @@ class Board(pygame.sprite.LayeredUpdates):
                     j.cur_frame = 1
                     j.image = j.frames[j.cur_frame]
                     for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj, self.sprites())):
-                        # print(1)
                         m.cur_frame = 1
                         m.image = m.frames[m.cur_frame]
+
+    def copyFrom(self, board):
+        for i in range(len(self.field)):
+            for j in range(len(self.field[i])):
+                if self.field[i][j].__class__ == Cell and self.field[i][j].frames_count == 2:
+                    self.field[i][j].cur_frame = board.field[i][j].cur_frame
+                    self.field[i][j].image = self.field[i][j].frames[self.field[i][j].cur_frame]
+                    self.field[i][j].cur_frame = board.field[i][j].cur_frame
+
+
 
     def appendPlayer(self, player):
         self.players_list.append(player)
