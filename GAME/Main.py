@@ -101,14 +101,14 @@ while running:
         board_left.toStartForm()
         board_left.update()
         board_left.updateToRedPoint(red_point)
-        board_left.draw(screen)
 
         red_point = (chrc_2_right.x + PLAYER_SIZE[0] // 2, chrc_2_right.y + PLAYER_SIZE[1] // 2)
         board_right.toStartForm()
         board_right.update()
         board_right.updateToRedPoint(red_point)
-        board_right.draw(screen)
 
+        board_right.draw(screen)
+        board_left.draw(screen)
         wall_group.draw(screen)
 
 
