@@ -2,14 +2,14 @@ from Levels import *
 
 pygame.init()
 size = WINDOW_W, WINDOW_H
-# screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+#screen = pygame.display.set_mode(size)
 pygame.display.set_caption('ToGetHer')
 running = True
 
-screen.fill(BACKGROUND_COLOR)
+screen.fill((10, 255, 10))
 
-level = Level("l2", screen)
+levelManager = LevelManager("l1", "l2", screen=screen)
 
 while running:
     for event in pygame.event.get():
@@ -20,6 +20,6 @@ while running:
                 running = False
             if event.key == pygame.K_c:
                 pygame.display.iconify()
-        level.updateStates(event)
-    level.update()
+        levelManager.level.updateStates(event)
+    levelManager.next(levelManager.level.update())
 pygame.quit()

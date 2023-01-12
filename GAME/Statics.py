@@ -44,6 +44,19 @@ def rebase(board1, board2, c1, c2, single_screen):
             board1.width, board2.width = board2.width, board1.width
 
 
+def cut_sheet(data):
+    sheet, columns, rows = data[0], data[1], data[2]
+    frames = []
+    rect = pygame.Rect(0, 0, sheet.get_width() // columns,
+                            sheet.get_height() // rows)
+    for j in range(rows):
+        for i in range(columns):
+            frame_location = (rect.w * i, rect.h * j)
+            frames.append(sheet.subsurface(pygame.Rect(
+                frame_location, rect.size)))
+    return frames
+
+
 ticks = 0
 clock = pygame.time.Clock()
 characters = pygame.sprite.Group()
@@ -60,3 +73,5 @@ player_data2 = [pygame.image.load("../resources/img/characters/2/idle.png"), pyg
         "../resources/img/characters/2/up.png"), 1, 4],
                 [pygame.image.load("../resources/img/characters/2/down.png"), 1, 4], [pygame.image.load(
         "../resources/img/characters/2/leftRight.png"), 4, 1]]
+loading = cut_sheet([pygame.image.load("../resources/img/loading.png"), 9, 1])
+background = pygame.image.load("../resources/img/background.jpg")

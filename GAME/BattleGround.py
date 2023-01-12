@@ -75,7 +75,7 @@ class Board(pygame.sprite.LayeredUpdates):
                     if j.act_obj == 777:
                         c += 1
                         if c == 2:
-                            print(1)
+                            return True
                     else:
                         j.cur_frame = 1
                         j.image = j.frames[j.cur_frame]
