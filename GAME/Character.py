@@ -104,39 +104,10 @@ class Chrc(pygame.sprite.Sprite):
 
     def update(self):
         keys = pygame.key.get_pressed()
-        if (keys[self.keyLeft]):
-            self.x -= SPEED / FPS
-            self.x -= SPEED / FPS / 2
-            self.collider.x = self.x + 45
-            self.collider.y = self.y + PLAYER_SIZE[1] - 30
-            if not self.canMove():
-                self.x += SPEED / FPS
-            self.x += SPEED / FPS / 2
-        if (keys[self.keyRight]):
-            self.x += SPEED / FPS
-            self.x += SPEED / FPS / 2
-            self.collider.x = self.x + 45
-            self.collider.y = self.y + PLAYER_SIZE[1] - 30
-            if not self.canMove():
-                self.x -= SPEED / FPS
-            self.x -= SPEED / FPS / 2
-        if (keys[self.keyUp]):
-            self.y -= SPEED / FPS
-            self.y -= SPEED / FPS / 2
-            self.collider.x = self.x + 45
-            self.collider.y = self.y + PLAYER_SIZE[1] - 30
-            if not self.canMove():
-                self.y += SPEED / FPS
-            self.y += SPEED / FPS / 2
-            print(self.y)
-        if (keys[self.keyDown]):
-            self.y += SPEED / FPS
-            self.y += SPEED / FPS / 2
-            self.collider.x = self.x + 45
-            self.collider.y = self.y + PLAYER_SIZE[1] - 30
-            if not self.canMove():
-                self.y -= SPEED / FPS
-            self.y -= SPEED / FPS / 2
+        self.move(keys[self.keyLeft], "x", "-")
+        self.move(keys[self.keyRight], "x", "+")
+        self.move(keys[self.keyUp], "y", "-")
+        self.move(keys[self.keyDown], "y", "+")
         if (self.ticks % (FPS // 6) == 0):
             self.cur_frame = (self.cur_frame + 1) % len(self.anim)
         self.rect.x = self.x
@@ -149,3 +120,13 @@ class Chrc(pygame.sprite.Sprite):
 
     def canMove(self):
         return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0))])
+
+    def move(self, key, coord, znak):
+        if (key):
+            exec(f"self.{coord} {znak}= SPEED / FPS")
+            exec(f"self.{coord} {znak}= SPEED / FPS / 2")
+            self.collider.x = self.x + 45
+            self.collider.y = self.y + PLAYER_SIZE[1] - 30
+            if not self.canMove():
+                exec(f"self.{coord} {znak}= (SPEED / FPS) * -1")
+            exec(f"self.{coord} {znak}= (SPEED / FPS / 2) * -1")
