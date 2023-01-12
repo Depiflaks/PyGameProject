@@ -19,7 +19,6 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
-
 def re_layered(board, c1, c2):
     if c1.y > c2.y:
         board.change_layer(c2, 4)
