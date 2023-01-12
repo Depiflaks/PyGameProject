@@ -55,6 +55,7 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
             if i.cur_frame == 1:
                 i.image = i.frames[0]
+                i.cur_frame = 0
 
     def update(self):
         for i in self.players_list:
