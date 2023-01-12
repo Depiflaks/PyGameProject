@@ -66,9 +66,12 @@ class Level:
         else:
             wall_group = pygame.sprite.Group()
             wall = pygame.sprite.Sprite(wall_group)
-            wall.image = pygame.Surface((CELL_SIZE[0], 1080))
-            wall.rect = pygame.Rect(CENTER[0] - CELL_SIZE[0] // 2, 0, CELL_SIZE[0], 1080)
-            pygame.draw.rect(wall.image, (100, 100, 100), (0, 0, wall.rect.w, wall.rect.h))
+            wall.image = pygame.transform.scale(load_image(f'cells/22.jpg'), (150, 1080))
+            wall.rect = wall.image.get_rect()
+            wall.rect.x = CENTER[0] - CELL_SIZE[0] // 2
+            wall.rect.y = 0
+            #pygame.draw.rect(wall.image, (100, 100, 100), (0, 0, wall.rect.w, wall.rect.h))
+
             self.board_right.draw(self.screen)
             self.board_left.draw(self.screen)
             wall_group.draw(self.screen)

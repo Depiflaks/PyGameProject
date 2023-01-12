@@ -62,6 +62,8 @@ class Board(pygame.sprite.LayeredUpdates):
 
     def toStartForm(self):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
+            i.cur_layer = i.obj_layer
+            self.change_layer(i, i.cur_layer)
             if i.cur_frame == 1:
                 i.image = i.frames[0]
                 i.cur_frame = 0
@@ -79,10 +81,13 @@ class Board(pygame.sprite.LayeredUpdates):
                     else:
                         j.cur_frame = 1
                         j.image = j.frames[j.cur_frame]
-                        for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj,
-                                             self.sprites())):
+                        for m in list(filter(lambda n: n.__class__ == Cell and (n.type == 3 or n.type == 6) and
+                                                       (n.ID == j.ID + 5 or n.ID == j.ID + 8), self.sprites())):
                             m.cur_frame = 1
                             m.image = m.frames[m.cur_frame]
+                if j.__class__ == Cell and j.type == 6:
+                    i.cur_layer = 6
+                    self.change_layer(j, i.cur_layer)
 
     def copyFrom(self, board):
         for i in range(len(self.field)):
@@ -90,7 +95,8 @@ class Board(pygame.sprite.LayeredUpdates):
                 if self.field[i][j].__class__ == Cell and self.field[i][j].frames_count == 2:
                     self.field[i][j].cur_frame = board.field[i][j].cur_frame
                     self.field[i][j].image = self.field[i][j].frames[self.field[i][j].cur_frame]
-                    self.field[i][j].cur_frame = board.field[i][j].cur_frame
+                    self.change_layer(self.field[i][j], board.field[i][j].cur_layer)
+                    #self.field[i][j].cur_frame = board.field[i][j].cur_frame
 
     def appendPlayer(self, player):
         self.players_list.append(player)
@@ -111,27 +117,37 @@ class Cell(pygame.sprite.Sprite):
         self.type = result[1]
         self.frames_count = result[0]
         self.ID = ID
+        self.cur_layer = self.obj_layer
         self.x = x
         self.y = y
         if self.type == 3:
             Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
             self.y -= DOOR_SIZE[1] - CELL_SIZE[1] + 10
+        elif self.type == 6:
+            Cell(board, 1, x, y)
+            self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
+            self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 90
         else:
             self.cutFrames(load_image(f'cells/{self.ID}.jpg'), self.frames_count)
-        board.change_layer(self, self.obj_layer)
+        board.change_layer(self, self.cur_layer)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.rect.x = self.x
         self.rect.y = self.y
 
     def cutFrames(self, sheet, count):
-        w = DOOR_SIZE[1] if self.type == 3 else CELL_SIZE[1]
-        self.rect = pygame.Rect(0, 0, CELL_SIZE[0], w)
-        sheet = pygame.transform.scale(sheet, (CELL_SIZE[0] * count, w))
+        if self.type == 3:
+            h = DOOR_SIZE[1]
+        elif self.type == 6:
+            print(1)
+            h = WALL_SIZE[1] - 90
+        else:
+            h = CELL_SIZE[1]
+        self.rect = pygame.Rect(0, 0, CELL_SIZE[0], h)
+        sheet = pygame.transform.scale(sheet, (CELL_SIZE[0] * count, h))
         for i in range(count):
             frame_location = (self.rect.w * i, 0)
-            # print(frame_location, sheet.get_width(), sheet.get_height(), self.rect.size)
             self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
 

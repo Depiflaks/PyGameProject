@@ -9,7 +9,7 @@ running = True
 
 screen.fill(BACKGROUND_COLOR)
 
-level = Level("l2", screen)
+level = Level("l3", screen)
 
 while running:
     for event in pygame.event.get():
