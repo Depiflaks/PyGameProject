@@ -78,7 +78,7 @@ while running:
     characters.update()
     red_point = ((chrc_1_center.x + chrc_2_center.x) / 2 + PLAYER_SIZE[0] / 2,
                  (chrc_1_center.y + chrc_2_center.y) / 2 + PLAYER_SIZE[1] / 2)
-    board_center.updateToRedPoint(red_point)
+    board_center.updateToRedPoint(red_point, True)
     red_point = (chrc_1_left.x + PLAYER_SIZE[0] // 2, chrc_1_left.y + PLAYER_SIZE[1] // 2)
     board_left.updateToRedPoint(red_point)
     red_point = (chrc_2_right.x + PLAYER_SIZE[0] // 2, chrc_2_right.y + PLAYER_SIZE[1] // 2)

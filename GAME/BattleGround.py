@@ -39,17 +39,21 @@ class Board(pygame.sprite.LayeredUpdates):
                 if self.field[i][j].ID == 0 and self.field[i + 1][j].ID != 0:
                     self.walls.append(Wall(self, self.field[i][j].rect.x, self.field[i][j].rect.y))
 
-    def updateToRedPoint(self, point):
+    def updateToRedPoint(self, point, main=False):
         move_x, move_y = self.center[0] - point[0], self.center[1] - point[1]
         for i in self.sprites():
             i.x += move_x
             i.y += move_y
-            if i.x > self.x + self.width:
-                i.collided = False
-                i.rect.x = i.x + self.offset
-            elif i.x < self.x:
-                i.collided = False
-                i.rect.x = i.x - self.offset
+            if not main:
+                if i.x > self.x + self.width:
+                    i.collided = False
+                    i.rect.x = i.x + self.offset
+                elif i.x < self.x:
+                    i.collided = False
+                    i.rect.x = i.x - self.offset
+                else:
+                    i.collided = True
+                    i.rect.x = i.x
             else:
                 i.collided = True
                 i.rect.x = i.x
