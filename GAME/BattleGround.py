@@ -3,13 +3,14 @@ import sys
 import sqlite3
 import csv
 from Statics import *
-from Character import Chrc
 from Consts import *
 import pygame
 
 """
 Класс для описания игрового поял в целом
 """
+
+
 class Board(pygame.sprite.LayeredUpdates):
     def __init__(self, file, pos, width, center, offset):
         super().__init__()
@@ -72,7 +73,8 @@ class Board(pygame.sprite.LayeredUpdates):
                 if j.__class__ == Cell and j.type == 2:
                     j.cur_frame = 1
                     j.image = j.frames[j.cur_frame]
-                    for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj, self.sprites())):
+                    for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj,
+                                         self.sprites())):
                         m.cur_frame = 1
                         m.image = m.frames[m.cur_frame]
 
@@ -83,8 +85,6 @@ class Board(pygame.sprite.LayeredUpdates):
                     self.field[i][j].cur_frame = board.field[i][j].cur_frame
                     self.field[i][j].image = self.field[i][j].frames[self.field[i][j].cur_frame]
                     self.field[i][j].cur_frame = board.field[i][j].cur_frame
-
-
 
     def appendPlayer(self, player):
         self.players_list.append(player)
@@ -125,7 +125,7 @@ class Cell(pygame.sprite.Sprite):
         sheet = pygame.transform.scale(sheet, (CELL_SIZE[0] * count, w))
         for i in range(count):
             frame_location = (self.rect.w * i, 0)
-            #print(frame_location, sheet.get_width(), sheet.get_height(), self.rect.size)
+            # print(frame_location, sheet.get_width(), sheet.get_height(), self.rect.size)
             self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
 

@@ -1,12 +1,9 @@
-import pygame
-
-from Consts import *
 from Statics import *
+
 
 class Chrc(pygame.sprite.Sprite):
     def __init__(self, data, row, column, board):
         self.ticks = 0
-        self.collided = True
         self.board = board
         self.type = 6
         super().__init__(characters)
@@ -49,58 +46,60 @@ class Chrc(pygame.sprite.Sprite):
         if keys[self.keyDown]:
             upDown += 1
         if event.type == pygame.KEYDOWN:
-            if (event.key == self.keyLeft):
+            if event.key == self.keyLeft:
                 self.ticks = 0
                 self.cur_frame = 0
                 self.anim = self.animations[5]
-            elif (event.key == self.keyRight):
+            elif event.key == self.keyRight:
                 self.ticks = 0
                 self.cur_frame = 0
                 self.anim = [pygame.transform.flip(el, True, False) for el in self.animations[5]]
-            elif (event.key == self.keyUp):
+            elif event.key == self.keyUp:
                 self.ticks = 0
                 self.cur_frame = 0
                 self.anim = self.animations[3]
-            elif (event.key == self.keyDown):
+            elif event.key == self.keyDown:
                 self.ticks = 0
                 self.cur_frame = 0
                 self.anim = self.animations[4]
             if (leftRight == 2 and upDown != 1) or (leftRight != 1 and upDown == 2):
                 self.ticks = 0
                 self.cur_frame = 0
-                if (event.key == self.keyUp):
+                if event.key == self.keyUp:
                     self.anim = self.animations[1]
-                if (event.key == self.keyLeft):
+                if event.key == self.keyLeft:
                     self.anim = self.animations[0]
-                if (event.key == self.keyRight):
+                if event.key == self.keyRight:
                     self.anim = [pygame.transform.flip(el, True, False) for el in self.animations[0]]
-                if (event.key == self.keyDown):
+                if event.key == self.keyDown:
                     self.anim = self.animations[2]
-        if (event.type == pygame.KEYUP):
-            if (event.key == self.keyLeft or event.key == self.keyRight or event.key == self.keyUp or event.key == self.keyDown):
+        if event.type == pygame.KEYUP:
+            if (
+                    event.key == self.keyLeft or event.key == self.keyRight or event.key == self.keyUp or
+                    event.key == self.keyDown):
                 self.ticks = 0
                 self.cur_frame = 0
-                if (event.key == self.keyUp):
+                if event.key == self.keyUp:
                     self.anim = self.animations[1]
-                if (event.key == self.keyLeft):
+                if event.key == self.keyLeft:
                     self.anim = self.animations[0]
-                if (event.key == self.keyRight):
+                if event.key == self.keyRight:
                     self.anim = [pygame.transform.flip(el, True, False) for el in self.animations[0]]
-                if (event.key == self.keyDown):
+                if event.key == self.keyDown:
                     self.anim = self.animations[2]
             if leftRight == 1:
                 self.ticks = 0
                 self.cur_frame = 0
-                if (keys[self.keyLeft]):
+                if keys[self.keyLeft]:
                     self.anim = self.animations[5]
-                if (keys[self.keyRight]):
+                if keys[self.keyRight]:
                     self.anim = [pygame.transform.flip(el, True, False) for el in self.animations[5]]
             if upDown == 1:
                 self.ticks = 0
                 self.cur_frame = 0
-                if (keys[self.keyUp]):
+                if keys[self.keyUp]:
                     self.anim = self.animations[3]
-                if (keys[self.keyDown]):
+                if keys[self.keyDown]:
                     self.anim = self.animations[4]
 
     def update(self):
@@ -109,7 +108,7 @@ class Chrc(pygame.sprite.Sprite):
         self.move(keys[self.keyRight], "x", "+")
         self.move(keys[self.keyUp], "y", "-")
         self.move(keys[self.keyDown], "y", "+")
-        if (self.ticks % (FPS // 6) == 0):
+        if self.ticks % (FPS // 6) == 0:
             self.cur_frame = (self.cur_frame + 1) % len(self.anim)
         self.rect.x = self.x
         self.rect.y = self.y
@@ -120,10 +119,11 @@ class Chrc(pygame.sprite.Sprite):
         self.ticks += 1
 
     def canMove(self):
-        return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0)) and sprite.collided])
+        return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (
+                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0))])
 
     def move(self, key, coord, znak):
-        if (key):
+        if key:
             exec(f"self.{coord} {znak}= SPEED / FPS")
             exec(f"self.{coord} {znak}= SPEED / FPS / 2")
             self.collider.x = self.x + 45

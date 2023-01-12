@@ -3,6 +3,7 @@ import os
 import sys
 from Consts import *
 
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('..', 'resources', 'img', name)
     if not os.path.isfile(fullname):
@@ -19,21 +20,33 @@ def load_image(name, colorkey=None):
     return image
 
 
+def re_layered(board, c1, c2):
+    if c1.y > c2.y:
+        board.change_layer(c2, 4)
+        board.change_layer(c1, 5)
+    else:
+        board.change_layer(c1, 4)
+        board.change_layer(c2, 5)
+
+
 def changeSize(obj, size):
     obj.image = pygame.transform.scale(obj.image, size)
-    #obj.rect.y = obj.y - size[1] + CELL_SIZE[1]
+    # obj.rect.y = obj.y - size[1] + CELL_SIZE[1]
+
 
 ticks = 0
 clock = pygame.time.Clock()
 characters = pygame.sprite.Group()
 
 player_data1 = [pygame.image.load("../resources/img/characters/1/idle.png"), pygame.image.load(
-    "../resources/img/characters/1/idleUp.png"), pygame.image.load("../resources/img/characters/1/idleDown.png"), [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], [pygame.image.load(
-    "../resources/img/characters/1/up.png"), 1, 4],
+    "../resources/img/characters/1/idleUp.png"), pygame.image.load("../resources/img/characters/1/idleDown.png"),
+                [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], [pygame.image.load(
+        "../resources/img/characters/1/up.png"), 1, 4],
                 [pygame.image.load("../resources/img/characters/1/down.png"), 1, 4], [pygame.image.load(
         "../resources/img/characters/1/leftRight.png"), 4, 1]]
 player_data2 = [pygame.image.load("../resources/img/characters/2/idle.png"), pygame.image.load(
-    "../resources/img/characters/2/idleUp.png"), pygame.image.load("../resources/img/characters/2/idleDown.png"), [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT], [pygame.image.load(
-    "../resources/img/characters/2/up.png"), 1, 4],
+    "../resources/img/characters/2/idleUp.png"), pygame.image.load("../resources/img/characters/2/idleDown.png"),
+                [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT], [pygame.image.load(
+        "../resources/img/characters/2/up.png"), 1, 4],
                 [pygame.image.load("../resources/img/characters/2/down.png"), 1, 4], [pygame.image.load(
         "../resources/img/characters/2/leftRight.png"), 4, 1]]
