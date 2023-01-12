@@ -55,6 +55,7 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
             if i.cur_frame == 1:
                 i.image = i.frames[0]
+                i.cur_frame = 0
 
     def update(self):
         for i in self.players_list:
@@ -119,6 +120,6 @@ class Wall(pygame.sprite.Sprite):
         self.x = x
         self.y = y - WALL_SIZE[1] + 90 + CELL_SIZE[1]
         self.rect.x = self.x
-        self.type = 4
+        self.type = 5
         self.rect.y = self.y
         board.change_layer(self, 2)
