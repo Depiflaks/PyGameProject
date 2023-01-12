@@ -67,22 +67,16 @@ class Board(pygame.sprite.LayeredUpdates):
                 i.cur_frame = 0
 
     def update(self):
-        c = 0
         for i in self.players_list:
             obj = [j for j in self if j.rect.colliderect(i.collider)]
             for j in obj:
                 if j.__class__ == Cell and j.type == 2:
-                    if j.act_obj == 777:
-                        c += 1
-                        if c == 2:
-                            print(1)
-                    else:
-                        j.cur_frame = 1
-                        j.image = j.frames[j.cur_frame]
-                        for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj,
-                                             self.sprites())):
-                            m.cur_frame = 1
-                            m.image = m.frames[m.cur_frame]
+                    j.cur_frame = 1
+                    j.image = j.frames[j.cur_frame]
+                    for m in list(filter(lambda n: n.__class__ == Cell and n.type == 3 and n.ID == j.act_obj,
+                                         self.sprites())):
+                        m.cur_frame = 1
+                        m.image = m.frames[m.cur_frame]
 
     def copyFrom(self, board):
         for i in range(len(self.field)):
