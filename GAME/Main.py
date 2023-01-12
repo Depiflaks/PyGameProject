@@ -87,7 +87,7 @@ while running:
         board_center.draw(screen)
     else:
         wall_group = pygame.sprite.Group()
-        
+
         wall = pygame.sprite.Sprite(wall_group)
         wall.image = pygame.Surface((CELL_SIZE[0], 1080))
         wall.rect = pygame.Rect(CENTER[0] - CELL_SIZE[0] // 2, 0, CELL_SIZE[0], 1080)

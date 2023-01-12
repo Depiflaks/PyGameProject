@@ -44,12 +44,15 @@ class Board(pygame.sprite.LayeredUpdates):
             i.x += move_x
             i.y += move_y
             if i.x > self.x + self.width:
+                self.collided = False
                 i.rect.x = self.x + self.width
             elif i.x < self.x:
+                self.collided = False
                 i.rect.x = self.x
             else:
+                self.collided = True
                 i.rect.x = i.x
-                i.rect.y = i.y
+            i.rect.y = i.y
 
     def toStartForm(self):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
@@ -78,6 +81,7 @@ class Cell(pygame.sprite.Sprite):
         super().__init__(board)
         self.board = board
         self.frames = []
+        self.collided = True
         con = sqlite3.connect("../resources/id.db")
         result = list(con.cursor().execute(f"""SELECT "Активная форма", "Тип", "Объект", "Слой" FROM ObjectID
             WHERE ID = {ID} """).fetchall()[0])
