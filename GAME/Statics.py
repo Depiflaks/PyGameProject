@@ -34,6 +34,16 @@ def changeSize(obj, size):
     # obj.rect.y = obj.y - size[1] + CELL_SIZE[1]
 
 
+def rebase(board1, board2, c1, c2, single_screen):
+    if single_screen:
+        if c1.x > c2.x and board1.x == 0 - CELL_SIZE[0]:
+            board1.x, board2.x, board1.center, board2.center = board2.x, board1.x, board2.center, board1.center
+            board1.width, board2.width = board2.width, board1.width
+        elif c1.x < c2.x and board1.x == (WINDOW_W - CELL_SIZE[0]) // 2:
+            board1.x, board2.x, board1.center, board2.center = board2.x, board1.x, board2.center, board1.center
+            board1.width, board2.width = board2.width, board1.width
+
+
 ticks = 0
 clock = pygame.time.Clock()
 characters = pygame.sprite.Group()
