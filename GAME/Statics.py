@@ -75,3 +75,4 @@ player_data2 = [pygame.image.load("../resources/img/characters/2/idle.png"), pyg
         "../resources/img/characters/2/leftRight.png"), 4, 1]]
 loading = cut_sheet([pygame.image.load("../resources/img/loading.png"), 9, 1])
 background = pygame.image.load("../resources/img/background.jpg")
+intro = cut_sheet([pygame.image.load("../resources/intro/merge.jpg"), 9, 3])

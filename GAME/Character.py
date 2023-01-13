@@ -2,10 +2,11 @@ from Statics import *
 
 
 class Chrc(pygame.sprite.Sprite):
-    def __init__(self, data, row, column, board):
+    def __init__(self, data, row, column, board, number):
+        self.number = number
         self.ticks = 0
         self.board = board
-        self.type = 6
+        self.type = 7
         super().__init__(characters)
         self.keyUp, self.keyDown, self.keyLeft, self.keyRight = data[3]
         self.animations = [[data[0]], [data[1]], [data[2]]]
@@ -120,7 +121,7 @@ class Chrc(pygame.sprite.Sprite):
 
     def canMove(self):
         return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (
-                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0))])
+                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))])
 
     def move(self, key, coord, znak):
         if key:
@@ -129,5 +130,7 @@ class Chrc(pygame.sprite.Sprite):
             self.collider.x = self.x + 45
             self.collider.y = self.y + PLAYER_SIZE[1] - 30
             if not self.canMove():
+                a = [sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (
+                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))]
                 exec(f"self.{coord} {znak}= (SPEED / FPS) * -1")
             exec(f"self.{coord} {znak}= (SPEED / FPS / 2) * -1")

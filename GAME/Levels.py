@@ -23,12 +23,12 @@ class Level:
         self.spawnPositions = [list(map(int, el.split())) for el in
                                open(f"../resources/levels/{directory}/chr.csv").read().strip().split("\n")]
 
-        self.chrc_1_center = Chrc(player_data1, *self.spawnPositions[0], self.board_center)
-        self.chrc_2_center = Chrc(player_data2, *self.spawnPositions[1], self.board_center)
+        self.chrc_1_center = Chrc(player_data1, *self.spawnPositions[0], self.board_center, 1)
+        self.chrc_2_center = Chrc(player_data2, *self.spawnPositions[1], self.board_center, 2)
 
-        self.chrc_1_left = Chrc(player_data1, *self.spawnPositions[0], self.board_left)
+        self.chrc_1_left = Chrc(player_data1, *self.spawnPositions[0], self.board_left, 1)
 
-        self.chrc_2_right = Chrc(player_data2, *self.spawnPositions[1], self.board_right)
+        self.chrc_2_right = Chrc(player_data2, *self.spawnPositions[1], self.board_right, 2)
 
         self.board_center.add(self.chrc_1_center, layer=CHARACTERS_LAYER)
         self.board_center.add(self.chrc_2_center, layer=CHARACTERS_LAYER)
@@ -55,6 +55,8 @@ class Level:
         self.board_left.toStartForm()
         self.board_right.toStartForm()
         end = self.board_center.update()
+        self.board_left.update()
+        self.board_right.update()
         self.board_left.copyFrom(self.board_center)
         self.board_right.copyFrom(self.board_center)
         characters.update()
@@ -101,9 +103,11 @@ class Level:
 
 class LevelManager:
     def __init__(self, *levels, screen=None):
+        self.index = 0
         self.levels = list(levels)
         self.currentLevel = 0
         self.screen = screen
+        self.drawIntro()
         self.level = Level(self.levels[self.currentLevel], self.screen)
     def next(self, flag):
         if not flag:
@@ -113,4 +117,12 @@ class LevelManager:
             self.level = Level(self.levels[self.currentLevel], self.screen)
         else:
             print("Вы победили!")
+
+    def drawIntro(self):
+        self.screen.blit(intro[self.index], (0, 0))
+        pygame.display.flip()
+        self.index += 1
+        clock.tick(FPS // 4)
+        if self.index < len(intro):
+            self.drawIntro()
 

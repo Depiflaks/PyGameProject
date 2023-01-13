@@ -140,7 +140,6 @@ class Cell(pygame.sprite.Sprite):
         if self.type == 3:
             h = DOOR_SIZE[1]
         elif self.type == 6:
-            print(1)
             h = WALL_SIZE[1] - 90
         else:
             h = CELL_SIZE[1]
