@@ -55,8 +55,6 @@ class Level:
         self.board_left.toStartForm()
         self.board_right.toStartForm()
         end = self.board_center.update()
-        self.board_left.update()
-        self.board_right.update()
         self.board_left.copyFrom(self.board_center)
         self.board_right.copyFrom(self.board_center)
         characters.update()
