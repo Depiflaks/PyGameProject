@@ -107,6 +107,7 @@ class LevelManager:
         self.screen = screen
         self.drawIntro()
         self.level = Level(self.levels[self.currentLevel], self.screen)
+
     def next(self, flag):
         if not flag:
             return

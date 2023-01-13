@@ -86,8 +86,8 @@ class Board(pygame.sprite.LayeredUpdates):
                             m.cur_frame = 1
                             m.image = m.frames[m.cur_frame]
                 if j.__class__ == Cell and j.type == 6:
-                    i.cur_layer = 6
-                    self.change_layer(j, i.cur_layer)
+                    j.cur_layer = 6
+                    self.change_layer(j, j.cur_layer)
 
     def copyFrom(self, board):
         for i in range(len(self.field)):
@@ -96,6 +96,7 @@ class Board(pygame.sprite.LayeredUpdates):
                     self.field[i][j].cur_frame = board.field[i][j].cur_frame
                     self.field[i][j].image = self.field[i][j].frames[self.field[i][j].cur_frame]
                     self.change_layer(self.field[i][j], board.field[i][j].cur_layer)
+                    self.field[i][j].cur_layer = board.field[i][j].cur_layer
                     #self.field[i][j].cur_frame = board.field[i][j].cur_frame
 
     def appendPlayer(self, player):
@@ -125,7 +126,7 @@ class Cell(pygame.sprite.Sprite):
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
             self.y -= DOOR_SIZE[1] - CELL_SIZE[1] + 10
         elif self.type == 6:
-            Cell(board, 1, x, y)
+            a = Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
             self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 90
         else:
