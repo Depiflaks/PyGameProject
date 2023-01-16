@@ -19,6 +19,7 @@ class Level:
                                 CENTER_LEFT, 1500)
         self.board_right = Board(f'{directory}/l.csv', ((WINDOW_W - CELL_SIZE[0]) // 2, 0),
                                  (WINDOW_W + CELL_SIZE[0]) // 2 + CELL_SIZE[0], CENTER_RIGHT, 1500)
+        self.loaded = True
 
         self.spawnPositions = [list(map(int, el.split())) for el in
                                open(f"../resources/levels/{directory}/chr.csv").read().strip().split("\n")]
@@ -57,7 +58,6 @@ class Level:
         end = self.board_center.update()
         self.board_left.copyFrom(self.board_center)
         self.board_right.copyFrom(self.board_center)
-        characters.update()
         red_point = ((self.chrc_1_center.x + self.chrc_2_center.x) / 2 + PLAYER_SIZE[0] / 2,
                      (self.chrc_1_center.y + self.chrc_2_center.y) / 2 + PLAYER_SIZE[1] / 2)
         self.board_center.updateToRedPoint(red_point, True)
@@ -66,6 +66,7 @@ class Level:
         self.board_left.updateToRedPoint(red_point)
         red_point = (self.chrc_2_right.x + PLAYER_SIZE[0] // 2, self.chrc_2_right.y + PLAYER_SIZE[1] // 2)
         self.board_right.updateToRedPoint(red_point)
+        characters.update()
         if self.single_screen:
             re_layered(self.board_center, self.chrc_1_center, self.chrc_2_center)
             self.board_center.draw(self.screen)

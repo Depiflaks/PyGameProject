@@ -2,6 +2,8 @@ import os
 import sys
 import sqlite3
 import csv
+
+from Character import Chrc
 from Statics import *
 from Consts import *
 import pygame
@@ -59,6 +61,12 @@ class Board(pygame.sprite.LayeredUpdates):
                 i.collided = True
                 i.rect.x = i.x
             i.rect.y = i.y
+            if i.__class__ == Cell and i.type == 6:
+                 i.collider = pygame.rect.Rect(i.rect[0], i.rect[1] + CELL_SIZE[1] * 2, i.rect[2],
+                                              i.rect[3] / 3)
+            elif i.__class__ != Chrc:
+                i.collider = i.rect.copy()
+
 
     def toStartForm(self):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
@@ -126,7 +134,7 @@ class Cell(pygame.sprite.Sprite):
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
             self.y -= DOOR_SIZE[1] - CELL_SIZE[1] + 10
         elif self.type == 6:
-            a = Cell(board, 1, x, y)
+            Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
             self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 90
         else:
@@ -136,6 +144,7 @@ class Cell(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
         self.rect.x = self.x
         self.rect.y = self.y
+        self.collider = self.rect.copy()
 
     def cutFrames(self, sheet, count):
         if self.type == 3:
@@ -162,4 +171,5 @@ class Wall(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.type = 5
         self.rect.y = self.y
+        self.collider = self.rect.copy()
         board.change_layer(self, 2)

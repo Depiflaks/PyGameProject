@@ -120,7 +120,7 @@ class Chrc(pygame.sprite.Sprite):
         self.ticks += 1
 
     def canMove(self):
-        return not bool([sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (
+        return not bool([sprite for sprite in self.board if sprite.collider.colliderect(self.collider) and (
                 sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))])
 
     def move(self, key, coord, znak):
@@ -130,7 +130,5 @@ class Chrc(pygame.sprite.Sprite):
             self.collider.x = self.x + 45
             self.collider.y = self.y + PLAYER_SIZE[1] - 30
             if not self.canMove():
-                a = [sprite for sprite in self.board if sprite.rect.colliderect(self.collider) and (
-                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))]
                 exec(f"self.{coord} {znak}= (SPEED / FPS) * -1")
             exec(f"self.{coord} {znak}= (SPEED / FPS / 2) * -1")
