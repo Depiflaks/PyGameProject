@@ -7,6 +7,9 @@ class Chrc(pygame.sprite.Sprite):
         self.ticks = 0
         self.board = board
         self.type = 7
+        self.shadow = pygame.sprite.Sprite(characters)
+        self.shadow.image = pygame.image.load("../resources/img/characters/shadow.png")
+        self.shadow.rect = self.shadow.image.get_rect()
         super().__init__(characters)
         self.keyUp, self.keyDown, self.keyLeft, self.keyRight = data[3]
         self.animations = [[data[0]], [data[1]], [data[2]]]
@@ -20,6 +23,10 @@ class Chrc(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.x, self.y)
         self.collider = pygame.rect.Rect(self.x + 45, self.y + PLAYER_SIZE[1] - 30, self.image.get_width() - 90, 25)
         board.appendPlayer(self)
+        self.shadow.x = self.x
+        self.shadow.y = self.y
+        self.board.add(self.shadow, layer=CHARACTERS_LAYER)
+        self.board.add(self, layer=CHARACTERS_LAYER)
 
     def cut_sheet(self, data):
         for el in data:
@@ -117,6 +124,7 @@ class Chrc(pygame.sprite.Sprite):
         changeSize(self, PLAYER_SIZE)
         self.collider.x = self.x + 45
         self.collider.y = self.y + PLAYER_SIZE[1] - 30
+        self.shadow.rect = pygame.rect.Rect(self.x + PLAYER_SIZE[0] / 4, self.y + PLAYER_SIZE[1] * 0.9, self.shadow.rect[2], self.shadow.rect[3])
         self.ticks += 1
 
     def canMove(self):

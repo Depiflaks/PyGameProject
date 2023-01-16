@@ -1,8 +1,5 @@
-from BattleGround import *
 from Statics import *
-from Character import Chrc
 from Consts import *
-from threading import Thread
 class Loading(pygame.sprite.Sprite):
     def __init__(self):
         self.index = 0
