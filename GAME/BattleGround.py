@@ -17,6 +17,8 @@ class Board(pygame.sprite.LayeredUpdates):
     def __init__(self, file, pos, width, center, offset):
         super().__init__()
         self.center = center
+        self.tick = 0
+        self.ost_x, self.ost_y = 0, 0
         self.x, self.y = pos
         self.offset = offset
         self.width = width
@@ -44,6 +46,11 @@ class Board(pygame.sprite.LayeredUpdates):
 
     def updateToRedPoint(self, point, main=False):
         move_x, move_y = self.center[0] - point[0], self.center[1] - point[1]
+        v_x, v_y = move_x / (TIME_STEP * FPS), move_y / (TIME_STEP * FPS)
+        if move_x > v_x:
+            move_x, self.ost_x = v_x, move_x - v_x
+        if move_y > v_y:
+            move_y, self.ost_y = v_y, move_y - v_y
         for i in self.sprites():
             i.x += move_x
             i.y += move_y
@@ -64,6 +71,9 @@ class Board(pygame.sprite.LayeredUpdates):
             if i.__class__ == Cell and i.type == 6:
                  i.collider = pygame.rect.Rect(i.rect[0], i.rect[1] + CELL_SIZE[1] * 2, i.rect[2],
                                               i.rect[3] / 3)
+            elif i.__class__ == Cell and i.type == 2:
+                 i.collider = pygame.rect.Rect(i.rect[0] + 40, i.rect[1] + 17, i.rect[2] - 80,
+                                              i.rect[3] - 39)
             elif i.__class__ != Chrc:
                 i.collider = i.rect.copy()
 
@@ -78,10 +88,11 @@ class Board(pygame.sprite.LayeredUpdates):
 
     def update(self):
         c = 0
+
         for i in self.players_list:
             obj = [j for j in self if j.rect.colliderect(i.collider)]
             for j in obj:
-                if j.__class__ == Cell and j.type == 2:
+                if j.__class__ == Cell and j.type == 2 and j.collider.colliderect(i.collider):
                     if j.act_obj == 777:
                         c += 1
                         if c == 2:
@@ -96,6 +107,7 @@ class Board(pygame.sprite.LayeredUpdates):
                 if j.__class__ == Cell and j.type == 6:
                     j.cur_layer = 6
                     self.change_layer(j, j.cur_layer)
+        #self.tick += 1
 
     def copyFrom(self, board):
         for i in range(len(self.field)):

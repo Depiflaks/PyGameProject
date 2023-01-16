@@ -4,6 +4,9 @@ import sys
 from Consts import *
 
 
+#def preparation_for_relocation(main_board, self_board):
+
+
 def load_image(name, colorkey=None):
     fullname = os.path.join('..', 'resources', 'img', name)
     if not os.path.isfile(fullname):
