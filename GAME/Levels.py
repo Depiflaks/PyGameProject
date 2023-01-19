@@ -40,6 +40,10 @@ class Level:
         self.chrc_2_center.updateState(event)
         self.chrc_1_left.updateState(event)
         self.chrc_2_right.updateState(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                menu.add_frame = abs(menu.add_frame - 2)
+                musicManager.setDoMusic(not musicManager.doMusic)
 
     def update(self):
         r = (self.chrc_1_center.x - self.chrc_2_center.x) ** 2 + (self.chrc_1_center.y - self.chrc_2_center.y) ** 2
