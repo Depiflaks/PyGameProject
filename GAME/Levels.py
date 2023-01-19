@@ -90,13 +90,11 @@ class Level:
             return True
 
     def loading(self):
-        mixer.music.load("../resources/sounds/load.mp3")
-        mixer.music.play(-1)
+        musicManager.play("load.mp3")
         load = Loading()
         while True:
             if self.loaded and not menu.indicator:
-                mixer.music.load("../resources/sounds/bg1.mp3")
-                mixer.music.play(-1)
+                musicManager.play()
                 break
             if self.loaded:
                 continue

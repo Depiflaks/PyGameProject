@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 from Consts import *
+from Music import *
 
 
 #def preparation_for_relocation(main_board, self_board):
@@ -83,3 +84,4 @@ shadow = pygame.image.load("../resources/img/characters/shadow.png")
 size = WINDOW_W, WINDOW_H
 #screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 screen = pygame.display.set_mode(size)
+musicManager = MusicManager()
