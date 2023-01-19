@@ -86,8 +86,6 @@ class Level:
             wall_group.draw(self.screen)
         if end:
             return True
-        pygame.display.flip()
-        clock.tick(FPS)
 
     def loading(self):
         mixer.music.load("../resources/sounds/load.mp3")
