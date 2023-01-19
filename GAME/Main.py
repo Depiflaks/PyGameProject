@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 from Levels import *
@@ -30,3 +32,5 @@ while running:
     pygame.display.flip()
     clock.tick(FPS)
 pygame.quit()
+sys.exit()
+
