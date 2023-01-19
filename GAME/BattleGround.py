@@ -88,14 +88,14 @@ class Board(pygame.sprite.LayeredUpdates):
     def update(self):
         c = 0
         for i in self.players_list:
-            obj = [j for j in self if j.collider.colliderect(i.collider)]
+            obj = [j for j in self if j.rect.colliderect(i.collider)]
             for j in obj:
                 if j.__class__ == Cell and j.type == 2:
                     if j.act_obj == 777:
                         c += 1
                         if c == 2:
                             return True
-                    else:
+                    elif j.collider.colliderect(i.collider):
                         j.cur_frame = abs(j.first_frame - 1)
                         j.image = j.frames[j.cur_frame]
                         for m in list(filter(lambda n: n.__class__ == Cell and (n.type == 3 or n.type == 6) and
