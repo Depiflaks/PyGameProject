@@ -24,7 +24,8 @@ class Board(pygame.sprite.LayeredUpdates):
         self.players_list = []
         # отерываем csv файл, в котором описан уровень
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
-            reader = list(list(map(int, i)) for i in list(csv.reader(csvfile, delimiter=';')))
+            reader = list(list(map(lambda n: int(n) if n != '' else 0, i))
+                          for i in list(csv.reader(csvfile, delimiter=';')))
         self.field = list()
         self.walls = list()
         # цикл по созданию поля из данных из файла
@@ -68,6 +69,9 @@ class Board(pygame.sprite.LayeredUpdates):
             elif i.__class__ == Cell and i.type == 2:
                  i.collider = pygame.rect.Rect(i.rect[0] + 40, i.rect[1] + 17, i.rect[2] - 80,
                                               i.rect[3] - 39)
+            elif i.__class__ == Cell and i.type == 3:
+                i.collider = pygame.rect.Rect(i.rect[0] + 46, i.rect[1], i.rect[2] - 92,
+                                              i.rect[3])
             elif i.__class__ != Chrc:
                 i.collider = i.rect.copy()
 
@@ -76,9 +80,10 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
             i.cur_layer = i.obj_layer
             self.change_layer(i, i.cur_layer)
-            if i.cur_frame == 1:
-                i.image = i.frames[0]
-                i.cur_frame = 0
+            if i.cur_frame != i.first_frame:
+                i.cur_frame = i.first_frame
+                i.image = i.frames[i.cur_frame]
+
 
     def update(self):
         c = 0
@@ -91,16 +96,15 @@ class Board(pygame.sprite.LayeredUpdates):
                         if c == 2:
                             return True
                     else:
-                        j.cur_frame = 1
+                        j.cur_frame = abs(j.first_frame - 1)
                         j.image = j.frames[j.cur_frame]
                         for m in list(filter(lambda n: n.__class__ == Cell and (n.type == 3 or n.type == 6) and
-                                                       (n.ID == j.ID + 5 or n.ID == j.ID + 8), self.sprites())):
-                            m.cur_frame = 1
+                                                       (n.img_ID == j.ID + 5 or n.img_ID == j.ID + 8), self.sprites())):
+                            m.cur_frame = abs(m.first_frame - 1)
                             m.image = m.frames[m.cur_frame]
                 if j.__class__ == Cell and j.type == 6:
                     j.cur_layer = 6
                     self.change_layer(j, j.cur_layer)
-        #self.tick += 1
 
     def copyFrom(self, board):
         for i in range(len(self.field)):
@@ -131,29 +135,32 @@ class Cell(pygame.sprite.Sprite):
         self.frames = []
         self.collided = True
         con = sqlite3.connect("../resources/id.db")
-        result = list(con.cursor().execute(f"""SELECT "Активная форма", "Тип", "Объект", "Слой" FROM ObjectID
-            WHERE ID = {ID} """).fetchall()[0])
+        result = list(con.cursor().execute(
+            f"""SELECT "Кол. форм", "Тип", "Объект", "Слой", "Изображение", "Первая форма" FROM ObjectID WHERE ID = {ID} """
+        ).fetchall()[0])
         if result[2] != 0:
             self.act_obj = result[2]
         self.obj_layer = result[3]
         self.type = result[1]
         self.frames_count = result[0]
         self.ID = ID
+        self.img_ID = result[4]
+        self.first_frame = result[5]
         self.cur_layer = self.obj_layer
         self.x = x
         self.y = y
         if self.type == 3:
             Cell(board, 1, x, y)
-            self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
+            self.cutFrames(load_image(f'cells/{self.img_ID}.png'), self.frames_count)
             self.y -= DOOR_SIZE[1] - CELL_SIZE[1] + 10
         elif self.type == 6:
             Cell(board, 1, x, y)
-            self.cutFrames(load_image(f'cells/{self.ID}.png'), self.frames_count)
+            self.cutFrames(load_image(f'cells/{self.img_ID}.png'), self.frames_count)
             self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 90
         else:
-            self.cutFrames(load_image(f'cells/{self.ID}.jpg'), self.frames_count)
+            self.cutFrames(load_image(f'cells/{self.img_ID}.jpg'), self.frames_count)
         board.change_layer(self, self.cur_layer)
-        self.cur_frame = 0
+        self.cur_frame = self.first_frame
         self.image = self.frames[self.cur_frame]
         self.rect.x = self.x
         self.rect.y = self.y
