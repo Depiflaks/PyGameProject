@@ -47,26 +47,23 @@ class Board(pygame.sprite.LayeredUpdates):
     def updateToRedPoint(self, point, main=False):
         move_x, move_y = self.center[0] - point[0], self.center[1] - point[1]
         v_x, v_y = move_x / (TIME_STEP * FPS), move_y / (TIME_STEP * FPS)
-        if move_x > v_x:
+        if abs(move_x) > max(3, abs(v_x)):
             move_x, self.ost_x = v_x, move_x - v_x
-        if move_y > v_y:
+        if abs(move_y) > max(3, abs(v_y)):
             move_y, self.ost_y = v_y, move_y - v_y
         for i in self.sprites():
             i.x += move_x
             i.y += move_y
-            if not main:
+            if not main and i.__class__ != Chrc:
                 if i.x > self.x + self.width:
-                    i.collided = False
-                    i.rect.x = i.x + self.offset
+                    #i.rect.x = i.x + self.offset
+                    i.drawful = False
                 elif i.x < self.x:
-                    i.collided = False
-                    i.rect.x = i.x - self.offset
+                    #i.rect.x = i.x - self.offset
+                    i.drawful = False
                 else:
-                    i.collided = True
-                    i.rect.x = i.x
-            else:
-                i.collided = True
-                i.rect.x = i.x
+                    i.drawful = True
+            i.rect.x = i.x
             i.rect.y = i.y
             if i.__class__ == Cell and i.type == 6:
                  i.collider = pygame.rect.Rect(i.rect[0], i.rect[1] + CELL_SIZE[1] * 2, i.rect[2],
@@ -92,7 +89,7 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in self.players_list:
             obj = [j for j in self if j.rect.colliderect(i.collider)]
             for j in obj:
-                if j.__class__ == Cell and j.type == 2 and j.collider.colliderect(i.collider):
+                if j.__class__ == Cell and j.type == 2:
                     if j.act_obj == 777:
                         c += 1
                         if c == 2:
@@ -122,10 +119,18 @@ class Board(pygame.sprite.LayeredUpdates):
     def appendPlayer(self, player):
         self.players_list.append(player)
 
+    def Draw(self, screen):
+        for spr in self.sprites():
+            try:
+                spr.draw(screen)
+            except Exception:
+                pass
+
 
 class Cell(pygame.sprite.Sprite):
     def __init__(self, board, ID, x, y):
         super().__init__(board)
+        self.drawful = True
         self.board = board
         self.frames = []
         self.collided = True
@@ -171,10 +176,15 @@ class Cell(pygame.sprite.Sprite):
             frame_location = (self.rect.w * i, 0)
             self.frames.append(sheet.subsurface(pygame.Rect(frame_location, self.rect.size)))
 
+    def draw(self, screen):
+        if self.drawful:
+            screen.blit(self.image, self.rect)
+
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, board, x, y):
         super().__init__(board)
+        self.drawful = True
         self.image = load_image(f'cells/21.png')
         self.image = pygame.transform.scale(self.image, WALL_SIZE)
         self.rect = self.image.get_rect()
@@ -185,3 +195,7 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = self.y
         self.collider = self.rect.copy()
         board.change_layer(self, 2)
+
+    def draw(self, screen):
+        if self.drawful:
+            screen.blit(self.image, self.rect)

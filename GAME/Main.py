@@ -9,7 +9,7 @@ running = True
 
 screen.fill((10, 255, 10))
 
-levelManager = LevelManager("l2", "l2", "l3", screen=screen)
+levelManager = LevelManager("l1", "l2", "l3", screen=screen)
 
 while running:
     for event in pygame.event.get():

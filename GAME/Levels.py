@@ -59,17 +59,16 @@ class Level:
 
         rebase(self.board_left, self.board_right, self.chrc_1_center, self.chrc_2_center, self.single_screen)
 
-        red_point_left = (self.chrc_1_left.x + PLAYER_SIZE[0] // 2, self.chrc_1_left.y + PLAYER_SIZE[1] // 2)
-        red_point_right = (self.chrc_2_right.x + PLAYER_SIZE[0] // 2, self.chrc_2_right.y + PLAYER_SIZE[1] // 2)
+        red_point_left = (self.chrc_1_left.x + PLAYER_SIZE[0] / 2, self.chrc_1_left.y + PLAYER_SIZE[1] / 2)
+        red_point_right = (self.chrc_2_right.x + PLAYER_SIZE[0] / 2, self.chrc_2_right.y + PLAYER_SIZE[1] / 2)
 
         if self.single_screen:
             red_point_left = (red_point_left[0] - (CENTER_LEFT[0] - self.chrc_2_center.x), red_point_left[1] - (CENTER_LEFT[1] - self.chrc_2_center.y))
             red_point_right = (red_point_right[0] - (CENTER_RIGHT[0] - self.chrc_1_center.x), red_point_right[1] - (CENTER_RIGHT[1] - self.chrc_1_center.y))
-
+        characters.update()
         self.board_left.updateToRedPoint(red_point_left)
         self.board_right.updateToRedPoint(red_point_right)
 
-        characters.update()
         if self.single_screen:
             re_layered(self.board_center, self.chrc_1_center, self.chrc_2_center)
             self.board_center.draw(self.screen)
@@ -82,8 +81,8 @@ class Level:
             wall.rect.y = 0
             #pygame.draw.rect(wall.image, (100, 100, 100), (0, 0, wall.rect.w, wall.rect.h))
 
-            self.board_right.draw(self.screen)
-            self.board_left.draw(self.screen)
+            self.board_right.Draw(self.screen)
+            self.board_left.Draw(self.screen)
             wall_group.draw(self.screen)
         if end:
             return True

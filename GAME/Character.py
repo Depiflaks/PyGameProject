@@ -3,6 +3,7 @@ from Statics import *
 
 class Chrc(pygame.sprite.Sprite):
     def __init__(self, data, row, column, board, number):
+        self.drawful = True
         self.number = number
         self.ticks = 0
         self.board = board
@@ -14,6 +15,7 @@ class Chrc(pygame.sprite.Sprite):
         self.keyUp, self.keyDown, self.keyLeft, self.keyRight = data[3]
         self.animations = [[data[0]], [data[1]], [data[2]]]
         self.cut_sheet(data[4:])
+        self.animations[1] = [self.animations[3][0]]
         self.cur_frame = 0
         self.image = data[0]
         self.anim = self.animations[0]
@@ -128,8 +130,13 @@ class Chrc(pygame.sprite.Sprite):
         self.ticks += 1
 
     def canMove(self):
-        return not bool([sprite for sprite in self.board if sprite.collider.colliderect(self.collider) and (
-                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))])
+        try:
+            return not bool([sprite for sprite in self.board if sprite.collider.colliderect(self.collider) and (
+                    sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))])
+
+        except Exception:
+            a = [sprite for sprite in self.board if sprite.collider.colliderect(self.collider)]
+            print(1)
 
     def move(self, key, coord, znak):
         if key:
@@ -140,3 +147,7 @@ class Chrc(pygame.sprite.Sprite):
             if not self.canMove():
                 exec(f"self.{coord} {znak}= (SPEED / FPS) * -1")
             exec(f"self.{coord} {znak}= (SPEED / FPS / 2) * -1")
+
+    def draw(self, screen):
+        if self.drawful:
+            screen.blit(self.image, self.rect)
