@@ -14,7 +14,7 @@ screen.fill((10, 255, 10))
 
 menu = Menu(screen, True)
 
-levelManager = LevelManager("l1", "l2", "l3", screen=screen)
+levelManager = LevelManager("l4", "l2", "l3", screen=screen)
 ind = False
 while running:
     for event in pygame.event.get():
