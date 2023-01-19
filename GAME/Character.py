@@ -9,8 +9,10 @@ class Chrc(pygame.sprite.Sprite):
         self.board = board
         self.type = 7
         self.shadow = pygame.sprite.Sprite(characters)
+        self.shadow.type = 8
         self.shadow.image = pygame.image.load("../resources/img/characters/shadow.png")
         self.shadow.rect = self.shadow.image.get_rect()
+        self.shadow.collider = self.shadow.rect.copy()
         super().__init__(characters)
         self.keyUp, self.keyDown, self.keyLeft, self.keyRight = data[3]
         self.animations = [[data[0]], [data[1]], [data[2]]]
@@ -127,16 +129,12 @@ class Chrc(pygame.sprite.Sprite):
         self.collider.x = self.x + 45
         self.collider.y = self.y + PLAYER_SIZE[1] - 30
         self.shadow.rect = pygame.rect.Rect(self.x + PLAYER_SIZE[0] / 4, self.y + PLAYER_SIZE[1] * 0.9, self.shadow.rect[2], self.shadow.rect[3])
+        self.shadow.collider = pygame.rect.Rect(0, 0, 0, 0)
         self.ticks += 1
 
     def canMove(self):
-        try:
-            return not bool([sprite for sprite in self.board if sprite.collider.colliderect(self.collider) and (
-                    sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))])
-
-        except Exception:
-            a = [sprite for sprite in self.board if sprite.collider.colliderect(self.collider)]
-            print(1)
+        return not bool([sprite for sprite in self.board if sprite.collider.colliderect(self.collider) and (
+                sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (sprite.type == 6 and sprite.cur_frame == 0))])
 
     def move(self, key, coord, znak):
         if key:

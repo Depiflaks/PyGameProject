@@ -4,15 +4,9 @@ from Levels import *
 from Menu import *
 
 pygame.init()
-size = WINDOW_W, WINDOW_H
-#screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-screen = pygame.display.set_mode(size)
 pygame.display.set_caption('ToGetHer')
 running = True
-
 screen.fill((10, 255, 10))
-
-menu = Menu(screen, True)
 
 levelManager = LevelManager("l1", "l2", "l3", screen=screen)
 ind = False

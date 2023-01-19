@@ -1,5 +1,6 @@
 from BattleGround import *
 from Statics import *
+from LowPriorityStatics import *
 from Character import Chrc
 from Consts import *
 import pygame
@@ -10,6 +11,8 @@ from pygame import mixer
 
 class Level:
     def __init__(self, directory, screen):
+        for i in characters:
+            characters.remove(i)
         self.screen = screen
         self.loaded = False
         th1 = Thread(target=self.loading)
@@ -20,7 +23,6 @@ class Level:
                                 CENTER_LEFT, 1500)
         self.board_right = Board(f'{directory}/l.csv', ((WINDOW_W - CELL_SIZE[0]) // 2, 0),
                                  (WINDOW_W + CELL_SIZE[0]) // 2 + CELL_SIZE[0], CENTER_RIGHT, 1500)
-        self.loaded = True
 
         self.spawnPositions = [list(map(int, el.split())) for el in
                                open(f"../resources/levels/{directory}/chr.csv").read().strip().split("\n")]
@@ -92,15 +94,17 @@ class Level:
         mixer.music.play(-1)
         load = Loading()
         while True:
+            if self.loaded and not menu.indicator:
+                mixer.music.load("../resources/sounds/bg1.mp3")
+                mixer.music.play(-1)
+                break
+            if self.loaded:
+                continue
             self.screen.blit(background, (0, 0))
             load.update()
             self.screen.blit(pygame.transform.scale(load.image, LOADING_SIZE), (load.rect.x, load.rect.y))
             pygame.display.flip()
             clock.tick(FPS)
-            if self.loaded:
-                mixer.music.load("../resources/sounds/bg1.mp3")
-                mixer.music.play(-1)
-                break
 
 
 class LevelManager:

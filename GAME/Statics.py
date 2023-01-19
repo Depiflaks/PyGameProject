@@ -80,3 +80,6 @@ loading = cut_sheet([pygame.image.load("../resources/img/loading.png"), 9, 1])
 background = pygame.image.load("../resources/img/background.jpg")
 intro = cut_sheet([pygame.image.load("../resources/intro/merge.jpg"), 9, 3])
 shadow = pygame.image.load("../resources/img/characters/shadow.png")
+size = WINDOW_W, WINDOW_H
+#screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size)
