@@ -12,7 +12,6 @@ import pygame
 Класс для описания игрового поял в целом
 """
 
-
 class Board(pygame.sprite.LayeredUpdates):
     def __init__(self, file, pos, width, center, offset):
         super().__init__()
@@ -56,10 +55,8 @@ class Board(pygame.sprite.LayeredUpdates):
             i.y += move_y
             if not main and i.__class__ != Chrc:
                 if i.x > self.x + self.width:
-                    #i.rect.x = i.x + self.offset
                     i.drawful = False
                 elif i.x < self.x:
-                    #i.rect.x = i.x - self.offset
                     i.drawful = False
                 else:
                     i.drawful = True

@@ -63,8 +63,8 @@ class Level:
         red_point_right = (self.chrc_2_right.x + PLAYER_SIZE[0] / 2, self.chrc_2_right.y + PLAYER_SIZE[1] / 2)
 
         if self.single_screen:
-            red_point_left = (red_point_left[0] - (CENTER_LEFT[0] - self.chrc_2_center.x), red_point_left[1] - (CENTER_LEFT[1] - self.chrc_2_center.y))
-            red_point_right = (red_point_right[0] - (CENTER_RIGHT[0] - self.chrc_1_center.x), red_point_right[1] - (CENTER_RIGHT[1] - self.chrc_1_center.y))
+            red_point_left = (red_point_left[0] - (self.board_right.center[0] - self.chrc_2_center.x), red_point_left[1] - (self.board_right.center[1] - self.chrc_2_center.y))
+            red_point_right = (red_point_right[0] - (self.board_left.center[0] - self.chrc_1_center.x), red_point_right[1] - (self.board_left.center[1] - self.chrc_1_center.y))
         characters.update()
         self.board_left.updateToRedPoint(red_point_left)
         self.board_right.updateToRedPoint(red_point_right)
