@@ -73,6 +73,9 @@ class Board(pygame.sprite.LayeredUpdates):
             elif i.__class__ == Cell and i.type == 3:
                 i.collider = pygame.rect.Rect(i.rect[0] + 46, i.rect[1], i.rect[2] - 92,
                                               i.rect[3])
+            elif i.__class__ == Cell and i.type == 5:
+                i.collider = pygame.rect.Rect(i.rect[0], i.rect[1], i.rect[2],
+                                              i.rect[3] - 25)
             elif i.__class__ != Chrc:
                 i.collider = i.rect.copy()
 
@@ -103,10 +106,11 @@ class Board(pygame.sprite.LayeredUpdates):
                                                        (n.img_ID == j.ID + 5 or n.img_ID == j.ID + 8), self.sprites())):
                             m.cur_frame = abs(m.first_frame - 1)
                             m.image = m.frames[m.cur_frame]
-                if j.__class__ == Cell and j.type == 6:
+                if j.__class__ == Cell and (j.type == 6 or (j.type == 5 and j.collider.colliderect(i.collider))):
                     if j.cur_layer != 6:
                         j.cur_layer = 6
                         self.change_layer(j, j.cur_layer)
+
 
     def copyFrom(self, board):
         for i in range(len(self.field)):
@@ -160,6 +164,10 @@ class Cell(pygame.sprite.Sprite):
             Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.img_ID}.png'), self.frames_count)
             self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 110
+        elif self.type == 5:
+            Cell(board, 1, x, y)
+            self.cutFrames(load_image(f'cells/{self.img_ID}.png'), self.frames_count)
+            self.y -= SIS_SIZE[1]
         else:
             self.cutFrames(load_image(f'cells/{self.img_ID}.jpg'), self.frames_count)
         board.change_layer(self, self.cur_layer)
@@ -174,6 +182,8 @@ class Cell(pygame.sprite.Sprite):
             h = DOOR_SIZE[1]
         elif self.type == 6:
             h = WALL_SIZE[1] - 110
+        elif self.type == 5:
+            h = SIS_SIZE[1]
         else:
             h = CELL_SIZE[1]
         self.rect = pygame.Rect(0, 0, CELL_SIZE[0], h)

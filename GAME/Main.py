@@ -1,20 +1,23 @@
-import sys
-
-import pygame
-
-from Levels import *
-from Menu import *
+#import sys
+#import ctypes
+#import pygame
+#import os.path, inspect
+#import io
+#from Levels import *
+#from Menu import *
 from LowestPriorityStatics import *
 
 pygame.init()
+
 pygame.display.set_caption('ToGetHer')
+icon_surf = load_image(f'i.ico')
+pygame.display.set_icon(load_image(icon_surf))
 running = True
 screen.fill((10, 255, 10))
 
-
-
 ind = False
 while running:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT or ind:
             running = False
@@ -39,4 +42,3 @@ while running:
     clock.tick(FPS)
 pygame.quit()
 sys.exit()
-

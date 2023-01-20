@@ -1,3 +1,3 @@
 from Levels import *
 
-levelManager = LevelManager("l1", screen=screen)
+levelManager = LevelManager("testL", "l7", screen=screen)

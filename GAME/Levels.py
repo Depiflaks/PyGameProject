@@ -114,8 +114,7 @@ class Level:
 
 class LevelManager:
     def __init__(self, *levels, screen=None):
-        mixer.music.load("../resources/sounds/intro.mp3")
-        mixer.music.play(-1)
+        musicManager.play("intro.mp3")
         self.index = 0
         self.levels = list(levels)
         self.currentLevel = 0

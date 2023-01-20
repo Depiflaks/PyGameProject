@@ -1,6 +1,7 @@
-import pygame
-from pygame import mixer
-
+#import pygame
+#from pygame import mixer
+#from Statics import *
+"""
 class MusicManager:
     def __init__(self):
         self.tracks = ["bg2.mp3", "bg3.mp3", "bg1.mp3"]
@@ -41,3 +42,6 @@ class MusicManager:
 
 
 pygame.init()
+icon_surf = load_image(f'i.ico')
+pygame.display.set_icon(load_image(icon_surf))
+"""
