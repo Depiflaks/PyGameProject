@@ -1,14 +1,12 @@
+# Статические объекты/методы
+# Созданы для использования в нескольких файлах
 import pygame
 import os
 import sys
 from Consts import *
 from Music import *
 
-
-#def preparation_for_relocation(main_board, self_board):
-
-
-
+# Удобная загрузка изображения
 def load_image(name, colorkey=None):
     fullname = os.path.join('..', 'resources', 'img', name)
     if not os.path.isfile(fullname):
@@ -24,7 +22,7 @@ def load_image(name, colorkey=None):
         image = image.convert_alpha()
     return image
 
-
+# Изменение слоя отрисовки персонажей, чтобы они не ходили друг на друге
 def re_layered(board, c1, c2):
     if c1.y > c2.y:
         board.change_layer(c2, 4)
@@ -34,11 +32,13 @@ def re_layered(board, c1, c2):
         board.change_layer(c2, 5)
 
 
+# Изменение размера объекта
 def changeSize(obj, size):
     obj.image = pygame.transform.scale(obj.image, size)
     # obj.rect.y = obj.y - size[1] + CELL_SIZE[1]
 
 
+#
 def rebase(board1, board2, c1, c2, single_screen):
     if single_screen:
         if c1.x > c2.x and board1.x == 0 - CELL_SIZE[0]:
@@ -49,11 +49,12 @@ def rebase(board1, board2, c1, c2, single_screen):
             board1.width, board2.width = board2.width, board1.width
 
 
+# Нарезка спрайта
 def cut_sheet(data):
     sheet, columns, rows = data[0], data[1], data[2]
     frames = []
     rect = pygame.Rect(0, 0, sheet.get_width() // columns,
-                            sheet.get_height() // rows)
+                       sheet.get_height() // rows)
     for j in range(rows):
         for i in range(columns):
             frame_location = (rect.w * i, rect.h * j)
@@ -83,7 +84,5 @@ background = pygame.image.load("../resources/img/background.jpg")
 intro = cut_sheet([pygame.image.load("../resources/intro/merge.jpg"), 9, 3])
 shadow = pygame.image.load("../resources/img/characters/shadow.png")
 size = WINDOW_W, WINDOW_H
-#screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 musicManager = MusicManager()
-

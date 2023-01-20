@@ -1,4 +1,5 @@
-from statistics import *
+# Статичные объекты/методы
+
 from Menu import *
 
 menu = Menu(screen, True)

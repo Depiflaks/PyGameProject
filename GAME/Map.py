@@ -4,7 +4,9 @@ import pygame.draw
 from Consts import *
 
 
+# Класс миникарты
 class Minimap:
+    # Инициализация
     def __init__(self, file, size, pos, chrc1, chrc2, startCell, ends):
         self.ends = ends
         self.startCell = startCell
@@ -21,6 +23,7 @@ class Minimap:
         self.size = size
         self.pos = pos
 
+    # Отрисовка карты
     def draw(self, screen):
         if self.hideable:
             return
@@ -29,14 +32,19 @@ class Minimap:
         for i in range(len(self.field)):
             for j in range(len(self.field[0])):
                 if self.field[i][j]:
-                    pygame.draw.rect(screen, pygame.Color("White"), (self.pos[0] + j * width , self.pos[1] + i * height, width, height))
+                    pygame.draw.rect(screen, pygame.Color("White"),
+                                     (self.pos[0] + j * width, self.pos[1] + i * height, width, height))
                 else:
-                    pygame.draw.rect(screen, pygame.Color("Gray"), (self.pos[0] + j * width , self.pos[1] + i * height, width, height))
+                    pygame.draw.rect(screen, pygame.Color("Gray"),
+                                     (self.pos[0] + j * width, self.pos[1] + i * height, width, height))
         for end in self.ends:
-            pygame.draw.rect(screen, pygame.Color("Pink"), (self.pos[0] + end[1] * width , self.pos[1] + end[0] * height, width, height))
+            pygame.draw.rect(screen, pygame.Color("Pink"),
+                             (self.pos[0] + end[1] * width, self.pos[1] + end[0] * height, width, height))
         if self.chrc1.collider.y < self.chrc2.collider.y:
             pygame.draw.rect(screen, pygame.Color("Blue"),
-                             (self.pos[0] + abs(self.startCell.x - self.chrc1.collider.x + 40) / CELL_SIZE[0] * width, self.pos[1] + abs(self.startCell.y - self.chrc1.collider.y + 30) / CELL_SIZE[1] * height, width, height))
+                             (self.pos[0] + abs(self.startCell.x - self.chrc1.collider.x + 40) / CELL_SIZE[0] * width,
+                              self.pos[1] + abs(self.startCell.y - self.chrc1.collider.y + 30) / CELL_SIZE[1] * height,
+                              width, height))
             pygame.draw.rect(screen, (162, 141, 37),
                              (self.pos[0] + abs(self.startCell.x - self.chrc2.collider.x + 40) / CELL_SIZE[0] * width,
                               self.pos[1] + abs(self.startCell.y - self.chrc2.collider.y + 30) / CELL_SIZE[1] * height,
@@ -51,5 +59,6 @@ class Minimap:
                               self.pos[1] + abs(self.startCell.y - self.chrc1.collider.y + 30) / CELL_SIZE[1] * height,
                               width, height))
 
+    # возможность спрятать карту
     def hide(self, hide):
         self.hideable = hide

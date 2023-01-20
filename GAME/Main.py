@@ -1,10 +1,5 @@
-#import sys
-#import ctypes
-#import pygame
-#import os.path, inspect
-#import io
-#from Levels import *
-#from Menu import *
+# Основной класс
+
 from LowestPriorityStatics import *
 running = True
 screen.fill((10, 255, 10))

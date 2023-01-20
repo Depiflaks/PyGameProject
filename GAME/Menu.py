@@ -1,9 +1,7 @@
-import math
-
-import pygame
 from Load import *
 
 
+# Класс меню
 class Menu(pygame.sprite.Group):
     def __init__(self, screen, indicator):
         super().__init__()
@@ -22,7 +20,6 @@ class Menu(pygame.sprite.Group):
         self.start_button = Button(self, self.screen, load_image(f'menu/start.jpg'), 3, x, 450, 400, 100)
         self.exit_button = Button(self, self.screen, load_image(f'menu/exit.jpg'), 2, x + 50, 600, 300, 80)
         self.val_button = Button(self, self.screen, load_image(f'menu/val.jpg'), 4, 1700, 900, 100, 100)
-
 
     def update_forms(self, event):
         if event.type == pygame.MOUSEMOTION:
@@ -49,6 +46,7 @@ class Menu(pygame.sprite.Group):
 
         return False
 
+
 class End(pygame.sprite.Group):
     def __init__(self, screen, menu, indicator):
         super().__init__()
@@ -69,7 +67,6 @@ class End(pygame.sprite.Group):
         self.m_x, self.m_y = 0, 0
         x = CENTER[0] - BUTTON_SIZE[0] // 2
         self.continue_button = Button(self, self.screen, load_image(f'menu/cont.jpg'), 2, x, 700, 400, 100)
-
 
     def update_forms(self, event):
         if event.type == pygame.MOUSEMOTION:

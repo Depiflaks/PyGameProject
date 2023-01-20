@@ -1,7 +1,9 @@
 from Statics import *
 
+
 # Класс персонажа
 class Chrc(pygame.sprite.Sprite):
+    # Инициализация
     def __init__(self, data, row, column, board, number):
         self.drawful = True
         self.number = number
@@ -35,6 +37,7 @@ class Chrc(pygame.sprite.Sprite):
         self.board.add(self.shadow, layer=CHARACTERS_LAYER)
         self.board.add(self, layer=CHARACTERS_LAYER)
 
+    # Нарезка спрайтов
     def cut_sheet(self, data):
         for el in data:
             sheet, columns, rows = el[0], el[1], el[2]
@@ -48,6 +51,7 @@ class Chrc(pygame.sprite.Sprite):
                         frame_location, self.rect.size)))
             self.animations.append(self.frames)
 
+    # Обновление состояния спрайтов персонажа
     def updateState(self, event):
         keys = pygame.key.get_pressed()
         leftRight = 0
@@ -117,6 +121,7 @@ class Chrc(pygame.sprite.Sprite):
                 if keys[self.keyDown]:
                     self.anim = self.animations[4]
 
+    # Обновление положения персонажа
     def update(self):
         keys = pygame.key.get_pressed()
         self.move(keys[self.keyLeft], "x", "-")
@@ -136,11 +141,13 @@ class Chrc(pygame.sprite.Sprite):
         self.shadow.collider = pygame.rect.Rect(0, 0, 0, 0)
         self.ticks += 1
 
+    # Проверка на возможность сдвинуться
     def canMove(self):
         return not bool([sprite for sprite in self.board if sprite.collider.colliderect(self.collider) and (
                 sprite.type == 4 or (sprite.type == 3 and sprite.cur_frame == 0) or (
-                    sprite.type == 6 and sprite.cur_frame == 0))])
+                sprite.type == 6 and sprite.cur_frame == 0))])
 
+    # Сдвиг персонажа
     def move(self, key, coord, znak):
         if key:
             exec(f"self.{coord} {znak}= SPEED / FPS")
@@ -151,6 +158,7 @@ class Chrc(pygame.sprite.Sprite):
                 exec(f"self.{coord} {znak}= (SPEED / FPS) * -1")
             exec(f"self.{coord} {znak}= (SPEED / FPS / 2) * -1")
 
+    # Отрисовка персонажа
     def draw(self, screen):
         if self.drawful:
             screen.blit(self.image, self.rect)
