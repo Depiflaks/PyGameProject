@@ -3,7 +3,7 @@ import math
 import pygame
 from Load import *
 
-
+# Класс для рисования главного меню
 class Menu(pygame.sprite.Group):
     def __init__(self, screen, indicator):
         super().__init__()
@@ -19,20 +19,24 @@ class Menu(pygame.sprite.Group):
         self.add_frame = 0
         self.m_x, self.m_y = 0, 0
         x = CENTER[0] - BUTTON_SIZE[0] // 2
+        # Создание кнопок
         self.start_button = Button(self, self.screen, load_image(f'menu/start.jpg'), 3, x, 450, 400, 100)
         self.exit_button = Button(self, self.screen, load_image(f'menu/exit.jpg'), 2, x + 50, 600, 300, 80)
         self.val_button = Button(self, self.screen, load_image(f'menu/val.jpg'), 4, 1700, 900, 100, 100)
 
-
+    # Процедура, обрабатывающая действия мыши
     def update_forms(self, event):
+        # Действия при нажатии кнопок
         if event.type == pygame.MOUSEMOTION:
             self.m_x, self.m_y = event.pos
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            # Кнопка начала
             if self.start_button.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.indicator = False
+            # Кнопка выхода
             if self.exit_button.rect.collidepoint(event.pos[0], event.pos[1]):
                 return True
-            # вставлять сюда (громкость)
+            # Регулирование громкости
             if self.val_button.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.add_frame = abs(self.add_frame - 2)
                 musicManager.setDoMusic(not musicManager.doMusic)
@@ -40,7 +44,7 @@ class Menu(pygame.sprite.Group):
             if event.key == pygame.K_p:
                 self.add_frame = abs(self.add_frame - 2)
                 musicManager.setDoMusic(not musicManager.doMusic)
-
+        # Изменение картинки кнопок в зависимости от положения мыши
         for i in filter(lambda n: n.__class__ == Button, self.sprites()):
             if i.rect.collidepoint(self.m_x, self.m_y):
                 i.image = i.frames[1 + (self.add_frame if i == self.val_button else 0)]
@@ -49,6 +53,7 @@ class Menu(pygame.sprite.Group):
 
         return False
 
+# Класс для описания конеченой сцены (принцип тот же, что и у Menu)
 class End(pygame.sprite.Group):
     def __init__(self, screen, menu, indicator):
         super().__init__()
@@ -88,7 +93,7 @@ class End(pygame.sprite.Group):
                 i.image = i.frames[0 + (self.add_frame if i == self.continue_button else 0)]
         return False
 
-
+#  Класс для описания одной кнопки
 class Button(pygame.sprite.Sprite):
     def __init__(self, group, screen, img, count, x, y, w, h):
         super().__init__(group)
@@ -99,6 +104,7 @@ class Button(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+    #  Нарезание спрайтов для анимации при наведении
     def cutFrames(self, sheet, count, w, h):
         self.rect = pygame.Rect(0, 0, w, h)
         sheet = pygame.transform.scale(sheet, (w * count, h))

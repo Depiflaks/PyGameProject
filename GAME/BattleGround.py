@@ -50,9 +50,11 @@ class Board(pygame.sprite.LayeredUpdates):
                 if self.field[i][j].ID == 0 and self.field[i + 1][j].ID != 0:
                     self.walls.append(Wall(self, self.field[i][j].rect.x, self.field[i][j].rect.y))
 
+    # После движения игроков необходимо сместить остальные объекты, чтобы игроки оказались в его центре
     def updateToRedPoint(self, point, main=False):
         move_x, move_y = self.center[0] - point[0], self.center[1] - point[1]
         v_x, v_y = move_x / (TIME_STEP * FPS), move_y / (TIME_STEP * FPS)
+        # Рассчёт скорости смещения
         if abs(move_x) > max(3, abs(v_x)):
             move_x, self.ost_x = v_x, move_x - v_x
         if abs(move_y) > max(3, abs(v_y)):
@@ -60,6 +62,7 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in self.sprites():
             i.x += move_x
             i.y += move_y
+            # Проверка на раздаление экрана
             if i.__class__ != Chrc:
                 if i.x > self.x + self.width:
                     i.drawful = False
@@ -69,6 +72,7 @@ class Board(pygame.sprite.LayeredUpdates):
                     i.drawful = True
             i.rect.x = i.x
             i.rect.y = i.y
+            # Создание коллайдера для каждого объекта
             if i.__class__ == Cell and i.type == 6:
                  i.collider = pygame.rect.Rect(i.rect[0], i.rect[1] + CELL_SIZE[1] * 2, i.rect[2],
                                               i.rect[3] / 3 + 10)
@@ -84,6 +88,7 @@ class Board(pygame.sprite.LayeredUpdates):
             elif i.__class__ != Chrc:
                 i.collider = i.rect.copy()
 
+    # Откат каждой клетки к изначальному виду
     def toStartForm(self):
         for i in self.sprites():
             if i.__class__ == Cell:
@@ -94,6 +99,7 @@ class Board(pygame.sprite.LayeredUpdates):
                     i.cur_frame = i.first_frame
                     i.image = i.frames[i.cur_frame]
 
+    # Проверка каждой кнопки на то, нажата ли она
     def update(self):
         c = 0
         for i in self.players_list:
@@ -107,6 +113,7 @@ class Board(pygame.sprite.LayeredUpdates):
                     elif j.collider.colliderect(i.collider):
                         j.cur_frame = abs(j.first_frame - 1)
                         j.image = j.frames[j.cur_frame]
+                        # Активация дверей
                         for m in list(filter(lambda n: n.__class__ == Cell and (n.type == 3 or n.type == 6) and
                                                        (n.img_ID == j.ID + 5 or n.img_ID == j.ID + 8), self.sprites())):
                             m.cur_frame = abs(m.first_frame - 1)
@@ -116,7 +123,7 @@ class Board(pygame.sprite.LayeredUpdates):
                         j.cur_layer = 6
                         self.change_layer(j, j.cur_layer)
 
-
+    # Правое и левые поля берут основные данные с главного поля
     def copyFrom(self, board):
         for i in range(len(self.field)):
             for j in range(len(self.field[i])):
@@ -128,9 +135,11 @@ class Board(pygame.sprite.LayeredUpdates):
                     self.field[i][j].cur_layer = board.field[i][j].cur_layer
                     #self.field[i][j].cur_frame = board.field[i][j].cur_frame
 
+    # Добавление игрока на поле
     def appendPlayer(self, player):
         self.players_list.append(player)
 
+    # Рисование 1 клетки
     def Draw(self, screen):
         for spr in self.sprites():
             try:
@@ -138,7 +147,7 @@ class Board(pygame.sprite.LayeredUpdates):
             except Exception:
                 pass
 
-
+# Класс для описания клеток
 class Cell(pygame.sprite.Sprite):
     def __init__(self, board, ID, x, y):
         super().__init__(board)
@@ -146,6 +155,7 @@ class Cell(pygame.sprite.Sprite):
         self.board = board
         self.frames = []
         self.collided = True
+        #Данные о каждой клетке берутся из SQLite базы данных
         con = sqlite3.connect("../resources/id.db")
         result = list(con.cursor().execute(
             f"""SELECT "Кол. форм", "Тип", "Объект", "Слой", "Изображение", "Первая форма" FROM ObjectID WHERE ID = {ID} """
@@ -154,6 +164,7 @@ class Cell(pygame.sprite.Sprite):
             self.act_obj = result[2]
         self.obj_layer = result[3]
         self.type = result[1]
+        # Создание кадров для анимации объектов
         self.frames_count = result[0]
         self.ID = ID
         self.img_ID = result[4]
@@ -161,6 +172,7 @@ class Cell(pygame.sprite.Sprite):
         self.cur_layer = self.obj_layer
         self.x = x
         self.y = y
+        # Расположение объекто в зависимости от его рамера
         if self.type == 3:
             Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.img_ID}.png'), self.frames_count)
@@ -182,6 +194,7 @@ class Cell(pygame.sprite.Sprite):
         self.rect.y = self.y
         self.collider = self.rect.copy()
 
+    # Здесь нарезаем Картинку на спрайты анимации
     def cutFrames(self, sheet, count):
         if self.type == 3:
             h = DOOR_SIZE[1]
@@ -201,7 +214,7 @@ class Cell(pygame.sprite.Sprite):
         if self.drawful:
             screen.blit(self.image, self.rect)
 
-
+# Отдельый класс для описания задних стен
 class Wall(pygame.sprite.Sprite):
     def __init__(self, board, x, y):
         super().__init__(board)
