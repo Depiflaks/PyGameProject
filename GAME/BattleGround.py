@@ -3,7 +3,7 @@ import sys
 import sqlite3
 import csv
 
-from Character import Chrc
+from Character import *
 from Statics import *
 from Consts import *
 import pygame
@@ -121,6 +121,19 @@ class Board(pygame.sprite.LayeredUpdates):
         for spr in self.sprites():
             try:
                 spr.draw(screen)
+            except Exception:
+                pass
+
+
+    def createMinimap(self, size):
+        for sprite in self.sprites():
+            changeSize(sprite, (size[0] / len(self.field[0]), size[1] / len(self.field)))
+
+    def drawMinimap(self, screen):
+        for sprite in self.sprites():
+            try:
+                if sprite.type != 2 and sprite.type != 8:
+                    sprite.draw(screen)
             except Exception:
                 pass
 

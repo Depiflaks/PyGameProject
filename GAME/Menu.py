@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from Load import *
 
@@ -33,6 +35,11 @@ class Menu(pygame.sprite.Group):
             # вставлять сюда (громкость)
             if self.val_button.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.add_frame = abs(self.add_frame - 2)
+                musicManager.setDoMusic(not musicManager.doMusic)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_p:
+                self.add_frame = abs(self.add_frame - 2)
+                musicManager.setDoMusic(not musicManager.doMusic)
 
         for i in filter(lambda n: n.__class__ == Button, self.sprites()):
             if i.rect.collidepoint(self.m_x, self.m_y):

@@ -2,10 +2,11 @@ from pygame import mixer
 
 class MusicManager:
     def __init__(self):
-        self.tracks = ["bg1.mp3", "bg2.mp3", "bg3.mp3"]
+        self.tracks = ["bg2.mp3", "bg3.mp3", "bg1.mp3"]
         self.currentTrack = 0
         self.track = self.tracks[self.currentTrack % len(self.tracks)]
         self.volume = 1
+        self.doMusic = True
 
     def play(self, *file):
         if len(file) == 0:
@@ -21,7 +22,15 @@ class MusicManager:
         mixer.music.stop()
 
     def setVolume(self, volume):
-        mixer.music.set_volume(volume)
+        self.volume = volume
+        if self.doMusic:
+            mixer.music.set_volume(volume)
+        else:
+            mixer.music.set_volume(0)
+
+    def setDoMusic(self, doMusic):
+        self.doMusic = doMusic
+        self.setVolume(self.volume)
 
     def pause(self, pause):
         if pause:
