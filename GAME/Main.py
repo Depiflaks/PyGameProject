@@ -1,12 +1,14 @@
-# Основной класс
+# Основной файл (Main)
 
 from LowestPriorityStatics import *
 running = True
+# Фон
 screen.fill((10, 255, 10))
 
 ind = False
+# Основной игровой цикл
 while running:
-
+    # Обработка всех событий
     for event in pygame.event.get():
         if event.type == pygame.QUIT or ind:
             running = False
