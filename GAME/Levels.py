@@ -7,6 +7,7 @@ import pygame
 from threading import Thread
 from Load import *
 from pygame import mixer
+from Map import *
 
 
 class Level:
@@ -23,6 +24,7 @@ class Level:
                                 CENTER_LEFT, 1500)
         self.board_right = Board(f'{directory}/l.csv', ((WINDOW_W - CELL_SIZE[0]) // 2, 0),
                                  (WINDOW_W + CELL_SIZE[0]) // 2 + CELL_SIZE[0], CENTER_RIGHT, 1500)
+        self.map = Minimap(f'{directory}/l.csv', MINIMAP_SIZE, (WINDOW_W - MINIMAP_SIZE[0], 0))
 
         self.spawnPositions = [list(map(int, el.split())) for el in
                                open(f"../resources/levels/{directory}/chr.csv").read().strip().split("\n")]
@@ -44,6 +46,8 @@ class Level:
             if event.key == pygame.K_p:
                 menu.add_frame = abs(menu.add_frame - 2)
                 musicManager.setDoMusic(not musicManager.doMusic)
+            if event.key == pygame.K_m:
+                self.map.hide(not self.map.hideable)
 
     def update(self):
         r = (self.chrc_1_center.x - self.chrc_2_center.x) ** 2 + (self.chrc_1_center.y - self.chrc_2_center.y) ** 2
@@ -90,6 +94,8 @@ class Level:
             self.board_right.Draw(self.screen)
             self.board_left.Draw(self.screen)
             wall_group.draw(self.screen)
+        self.map.draw(screen)
+        a = characters.sprites()
         if end:
             return True
 

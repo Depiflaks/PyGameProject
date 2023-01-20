@@ -13,6 +13,7 @@ class Chrc(pygame.sprite.Sprite):
         self.shadow.image = pygame.image.load("../resources/img/characters/shadow.png")
         self.shadow.rect = self.shadow.image.get_rect()
         self.shadow.collider = self.shadow.rect.copy()
+        self.shadow.draw = lambda x: x.blit(self.shadow.image, pygame.rect.Rect(self.x + PLAYER_SIZE[0] / 4, self.y + PLAYER_SIZE[1] * 0.9, self.shadow.rect[2], self.shadow.rect[3]))
         super().__init__(characters)
         self.keyUp, self.keyDown, self.keyLeft, self.keyRight = data[3]
         self.animations = [[data[0]], [data[1]], [data[2]]]
