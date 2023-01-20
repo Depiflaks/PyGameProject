@@ -1,17 +1,12 @@
-import time
-
 from BattleGround import *
-from Statics import *
 from LowPriorityStatics import *
 from Character import Chrc
-from Consts import *
-import pygame
 from threading import Thread
 from Load import *
-from pygame import mixer
 from Map import *
 
 
+# Класс уровня
 class Level:
     def __init__(self, directory, screen):
         for i in characters:
@@ -41,6 +36,7 @@ class Level:
         self.chrc_2_right = Chrc(player_data2, *self.spawnPositions[1], self.board_right, 2)
         self.loaded = True
 
+    # Обновление состояний спрайтов объектов в уровне
     def updateStates(self, event):
         self.chrc_1_center.updateState(event)
         self.chrc_2_center.updateState(event)
@@ -53,6 +49,7 @@ class Level:
             if event.key == pygame.K_m:
                 self.map.hide(not self.map.hideable)
 
+    # обновление всего уровня
     def update(self):
         r = (self.chrc_1_center.x - self.chrc_2_center.x) ** 2 + (self.chrc_1_center.y - self.chrc_2_center.y) ** 2
         if r > MIN:
@@ -67,14 +64,16 @@ class Level:
         self.board_left.copyFrom(self.board_center)
         self.board_right.copyFrom(self.board_center)
         red_point_center = ((self.chrc_1_center.x + self.chrc_2_center.x) / 2 + PLAYER_SIZE[0] / 2,
-                     (self.chrc_1_center.y + self.chrc_2_center.y) / 2 + PLAYER_SIZE[1] / 2)
+                            (self.chrc_1_center.y + self.chrc_2_center.y) / 2 + PLAYER_SIZE[1] / 2)
         self.board_center.updateToRedPoint(red_point_center, True)
         rebase(self.board_left, self.board_right, self.chrc_1_center, self.chrc_2_center, self.single_screen)
         red_point_left = (self.chrc_1_left.x + PLAYER_SIZE[0] / 2, self.chrc_1_left.y + PLAYER_SIZE[1] / 2)
         red_point_right = (self.chrc_2_right.x + PLAYER_SIZE[0] / 2, self.chrc_2_right.y + PLAYER_SIZE[1] / 2)
         if self.single_screen:
-            red_point_left = (red_point_left[0] - (self.board_right.center[0] - self.chrc_2_center.x), red_point_left[1] - (self.board_right.center[1] - self.chrc_2_center.y))
-            red_point_right = (red_point_right[0] - (self.board_left.center[0] - self.chrc_1_center.x), red_point_right[1] - (self.board_left.center[1] - self.chrc_1_center.y))
+            red_point_left = (red_point_left[0] - (self.board_right.center[0] - self.chrc_2_center.x),
+                              red_point_left[1] - (self.board_right.center[1] - self.chrc_2_center.y))
+            red_point_right = (red_point_right[0] - (self.board_left.center[0] - self.chrc_1_center.x),
+                               red_point_right[1] - (self.board_left.center[1] - self.chrc_1_center.y))
         characters.update()
         self.board_left.updateToRedPoint(red_point_left)
         self.board_right.updateToRedPoint(red_point_right)
@@ -88,7 +87,7 @@ class Level:
             wall.rect = wall.image.get_rect()
             wall.rect.x = CENTER[0] - CELL_SIZE[0] // 2
             wall.rect.y = 0
-            #pygame.draw.rect(wall.image, (100, 100, 100), (0, 0, wall.rect.w, wall.rect.h))
+            # pygame.draw.rect(wall.image, (100, 100, 100), (0, 0, wall.rect.w, wall.rect.h))
 
             self.board_right.Draw(self.screen)
             self.board_left.Draw(self.screen)
@@ -96,6 +95,8 @@ class Level:
         self.map.draw(screen)
         if end:
             return True
+
+    # Анимация + звук, пока загружается уровень
     def loading(self):
         musicManager.play("load.mp3")
         load = Loading()
@@ -112,7 +113,9 @@ class Level:
             clock.tick(FPS)
 
 
+# Класс регулировки уровней
 class LevelManager:
+    # Инициализация
     def __init__(self, *levels, screen=None):
         pygame.init()
         pygame.display.set_caption('ToGetHer')
@@ -127,6 +130,7 @@ class LevelManager:
         self.drawIntro()
         self.startLoad()
 
+    # Смена уровня
     def next(self, flag):
         if not flag:
             return
@@ -137,6 +141,7 @@ class LevelManager:
             end.indicator = True
             end.appendLevelManager(self)
 
+    # Отрисовка заставки
     def drawIntro(self):
         self.screen.blit(intro[self.index], (0, 0))
         pygame.display.flip()
@@ -145,6 +150,6 @@ class LevelManager:
         if self.index < len(intro):
             self.drawIntro()
 
+    # Загрузка текущего уровня
     def startLoad(self):
         self.level = Level(self.levels[self.currentLevel], self.screen)
-

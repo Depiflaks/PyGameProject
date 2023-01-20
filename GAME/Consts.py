@@ -1,3 +1,4 @@
+# Константные значения
 CELL_SIZE = 150, 100
 WALL_SIZE = 150, 430
 DOOR_SIZE = 150, 300
@@ -17,4 +18,3 @@ CHARACTERS_LAYER = 4
 MIN = 700 ** 2
 TIME_STEP = 0.5
 MINIMAP_SIZE = (200, 200)
-
