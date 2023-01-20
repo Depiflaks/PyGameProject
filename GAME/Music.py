@@ -1,9 +1,8 @@
-#import pygame
-#from pygame import mixer
-#from Statics import *
-"""
+import pygame
+from pygame import mixer
 class MusicManager:
     def __init__(self):
+        mixer.init()
         self.tracks = ["bg2.mp3", "bg3.mp3", "bg1.mp3"]
         self.currentTrack = 0
         self.track = self.tracks[self.currentTrack % len(self.tracks)]
@@ -39,9 +38,3 @@ class MusicManager:
             mixer.music.pause()
         else:
             mixer.music.unpause()
-
-
-pygame.init()
-icon_surf = load_image(f'i.ico')
-pygame.display.set_icon(load_image(icon_surf))
-"""

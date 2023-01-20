@@ -6,12 +6,6 @@
 #from Levels import *
 #from Menu import *
 from LowestPriorityStatics import *
-
-pygame.init()
-
-pygame.display.set_caption('ToGetHer')
-icon_surf = load_image(f'i.ico')
-pygame.display.set_icon(load_image(icon_surf))
 running = True
 screen.fill((10, 255, 10))
 

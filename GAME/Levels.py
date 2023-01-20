@@ -114,6 +114,11 @@ class Level:
 
 class LevelManager:
     def __init__(self, *levels, screen=None):
+        pygame.init()
+        pygame.display.set_caption('ToGetHer')
+        icon_surf = pygame.image.load(f'../resources/img/i.ico')
+        pygame.display.set_icon(icon_surf)
+        pygame.display.flip()
         musicManager.play("intro.mp3")
         self.index = 0
         self.levels = list(levels)
