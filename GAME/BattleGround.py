@@ -65,7 +65,7 @@ class Board(pygame.sprite.LayeredUpdates):
             i.rect.y = i.y
             if i.__class__ == Cell and i.type == 6:
                  i.collider = pygame.rect.Rect(i.rect[0], i.rect[1] + CELL_SIZE[1] * 2, i.rect[2],
-                                              i.rect[3] / 3)
+                                              i.rect[3] / 3 + 10)
             elif i.__class__ == Cell and i.type == 2:
                  i.collider = pygame.rect.Rect(i.rect[0] + 40, i.rect[1] + 17, i.rect[2] - 80,
                                               i.rect[3] - 39)
@@ -75,7 +75,6 @@ class Board(pygame.sprite.LayeredUpdates):
             elif i.__class__ != Chrc:
                 i.collider = i.rect.copy()
 
-
     def toStartForm(self):
         for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
             i.cur_layer = i.obj_layer
@@ -83,7 +82,6 @@ class Board(pygame.sprite.LayeredUpdates):
             if i.cur_frame != i.first_frame:
                 i.cur_frame = i.first_frame
                 i.image = i.frames[i.cur_frame]
-
 
     def update(self):
         c = 0
@@ -156,7 +154,7 @@ class Cell(pygame.sprite.Sprite):
         elif self.type == 6:
             Cell(board, 1, x, y)
             self.cutFrames(load_image(f'cells/{self.img_ID}.png'), self.frames_count)
-            self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 90
+            self.y -= WALL_SIZE[1] - CELL_SIZE[1] - 110
         else:
             self.cutFrames(load_image(f'cells/{self.img_ID}.jpg'), self.frames_count)
         board.change_layer(self, self.cur_layer)
@@ -170,7 +168,7 @@ class Cell(pygame.sprite.Sprite):
         if self.type == 3:
             h = DOOR_SIZE[1]
         elif self.type == 6:
-            h = WALL_SIZE[1] - 90
+            h = WALL_SIZE[1] - 110
         else:
             h = CELL_SIZE[1]
         self.rect = pygame.Rect(0, 0, CELL_SIZE[0], h)
@@ -192,7 +190,7 @@ class Wall(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, WALL_SIZE)
         self.rect = self.image.get_rect()
         self.x = x
-        self.y = y - WALL_SIZE[1] + 90 + CELL_SIZE[1]
+        self.y = y - WALL_SIZE[1] + 100 + CELL_SIZE[1]
         self.rect.x = self.x
         self.type = 5
         self.rect.y = self.y
