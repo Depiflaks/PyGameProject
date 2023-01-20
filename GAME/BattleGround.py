@@ -2,6 +2,7 @@ import os
 import sys
 import sqlite3
 import csv
+import time
 
 from Character import *
 from Statics import *
@@ -54,7 +55,7 @@ class Board(pygame.sprite.LayeredUpdates):
         for i in self.sprites():
             i.x += move_x
             i.y += move_y
-            if not main and i.__class__ != Chrc:
+            if i.__class__ != Chrc:
                 if i.x > self.x + self.width:
                     i.drawful = False
                 elif i.x < self.x:
@@ -77,12 +78,14 @@ class Board(pygame.sprite.LayeredUpdates):
 
 
     def toStartForm(self):
-        for i in list(filter(lambda n: n.__class__ == Cell, self.sprites())):
-            i.cur_layer = i.obj_layer
-            self.change_layer(i, i.cur_layer)
-            if i.cur_frame != i.first_frame:
-                i.cur_frame = i.first_frame
-                i.image = i.frames[i.cur_frame]
+        for i in self.sprites():
+            if i.__class__ == Cell:
+                if i.cur_layer != i.obj_layer:
+                    i.cur_layer = i.obj_layer
+                    self.change_layer(i, i.cur_layer)
+                if i.type in [2, 6, 3] and i.cur_frame != i.first_frame:
+                    i.cur_frame = i.first_frame
+                    i.image = i.frames[i.cur_frame]
 
 
     def update(self):
@@ -103,8 +106,9 @@ class Board(pygame.sprite.LayeredUpdates):
                             m.cur_frame = abs(m.first_frame - 1)
                             m.image = m.frames[m.cur_frame]
                 if j.__class__ == Cell and j.type == 6:
-                    j.cur_layer = 6
-                    self.change_layer(j, j.cur_layer)
+                    if j.cur_layer != 6:
+                        j.cur_layer = 6
+                        self.change_layer(j, j.cur_layer)
 
     def copyFrom(self, board):
         for i in range(len(self.field)):
@@ -112,7 +116,8 @@ class Board(pygame.sprite.LayeredUpdates):
                 if self.field[i][j].__class__ == Cell and self.field[i][j].frames_count == 2:
                     self.field[i][j].cur_frame = board.field[i][j].cur_frame
                     self.field[i][j].image = self.field[i][j].frames[self.field[i][j].cur_frame]
-                    self.change_layer(self.field[i][j], board.field[i][j].cur_layer)
+                    if self.field[i][j].cur_layer != board.field[i][j].cur_layer:
+                        self.change_layer(self.field[i][j], board.field[i][j].cur_layer)
                     self.field[i][j].cur_layer = board.field[i][j].cur_layer
                     #self.field[i][j].cur_frame = board.field[i][j].cur_frame
 
@@ -123,19 +128,6 @@ class Board(pygame.sprite.LayeredUpdates):
         for spr in self.sprites():
             try:
                 spr.draw(screen)
-            except Exception:
-                pass
-
-
-    def createMinimap(self, size):
-        for sprite in self.sprites():
-            changeSize(sprite, (size[0] / len(self.field[0]), size[1] / len(self.field)))
-
-    def drawMinimap(self, screen):
-        for sprite in self.sprites():
-            try:
-                if sprite.type != 2 and sprite.type != 8:
-                    sprite.draw(screen)
             except Exception:
                 pass
 

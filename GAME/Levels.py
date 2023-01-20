@@ -1,3 +1,5 @@
+import time
+
 from BattleGround import *
 from Statics import *
 from LowPriorityStatics import *
@@ -62,26 +64,21 @@ class Level:
         end = self.board_center.update()
         self.board_left.copyFrom(self.board_center)
         self.board_right.copyFrom(self.board_center)
-
         red_point_center = ((self.chrc_1_center.x + self.chrc_2_center.x) / 2 + PLAYER_SIZE[0] / 2,
                      (self.chrc_1_center.y + self.chrc_2_center.y) / 2 + PLAYER_SIZE[1] / 2)
         self.board_center.updateToRedPoint(red_point_center, True)
-
         rebase(self.board_left, self.board_right, self.chrc_1_center, self.chrc_2_center, self.single_screen)
-
         red_point_left = (self.chrc_1_left.x + PLAYER_SIZE[0] / 2, self.chrc_1_left.y + PLAYER_SIZE[1] / 2)
         red_point_right = (self.chrc_2_right.x + PLAYER_SIZE[0] / 2, self.chrc_2_right.y + PLAYER_SIZE[1] / 2)
-
         if self.single_screen:
             red_point_left = (red_point_left[0] - (self.board_right.center[0] - self.chrc_2_center.x), red_point_left[1] - (self.board_right.center[1] - self.chrc_2_center.y))
             red_point_right = (red_point_right[0] - (self.board_left.center[0] - self.chrc_1_center.x), red_point_right[1] - (self.board_left.center[1] - self.chrc_1_center.y))
         characters.update()
         self.board_left.updateToRedPoint(red_point_left)
         self.board_right.updateToRedPoint(red_point_right)
-
         if self.single_screen:
             re_layered(self.board_center, self.chrc_1_center, self.chrc_2_center)
-            self.board_center.draw(self.screen)
+            self.board_center.Draw(self.screen)
         else:
             wall_group = pygame.sprite.Group()
             wall = pygame.sprite.Sprite(wall_group)
@@ -95,10 +92,8 @@ class Level:
             self.board_left.Draw(self.screen)
             wall_group.draw(self.screen)
         self.map.draw(screen)
-        a = characters.sprites()
         if end:
             return True
-
     def loading(self):
         musicManager.play("load.mp3")
         load = Loading()

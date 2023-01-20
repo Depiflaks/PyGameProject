@@ -1,4 +1,5 @@
 import sys
+import time
 
 import pygame
 
@@ -10,7 +11,7 @@ pygame.display.set_caption('ToGetHer')
 running = True
 screen.fill((10, 255, 10))
 
-levelManager = LevelManager("l3", "l2", "l3", "l4", screen=screen)
+levelManager = LevelManager("l6", "l2", "l3", "l4", screen=screen)
 ind = False
 while running:
     for event in pygame.event.get():
