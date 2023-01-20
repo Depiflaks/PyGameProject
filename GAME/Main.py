@@ -4,6 +4,7 @@ import pygame
 
 from Levels import *
 from Menu import *
+from LowestPriorityStatics import *
 
 pygame.init()
 pygame.display.set_caption('ToGetHer')
@@ -11,9 +12,6 @@ running = True
 screen.fill((10, 255, 10))
 
 
-levelManager = LevelManager("l7", "l2", "l3", "l4", screen=screen)
-
-levelManager = LevelManager("l3", "l2", "l3", "l4", screen=screen)
 
 ind = False
 while running:
@@ -27,10 +25,14 @@ while running:
                 pygame.display.iconify()
         if menu.indicator:
             ind = menu.update_forms(event)
+        elif end.indicator:
+            end.update_forms(event)
         else:
             levelManager.level.updateStates(event)
     if menu.indicator:
         menu.draw(screen)
+    elif end.indicator:
+        end.draw(screen)
     else:
         levelManager.next(levelManager.level.update())
     pygame.display.flip()

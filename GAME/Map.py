@@ -1,10 +1,13 @@
 import csv
 
 import pygame.draw
+from Consts import *
 
 
 class Minimap:
-    def __init__(self, file, size, pos):
+    def __init__(self, file, size, pos, chrc1, chrc2, startCell):
+        self.startCell = startCell
+        self.chrc1, self.chrc2 = chrc1, chrc2
         self.hideable = False
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(lambda n: int(n) if n != '' else 0, i))
@@ -28,6 +31,12 @@ class Minimap:
                     pygame.draw.rect(screen, pygame.Color("White"), (self.pos[0] + j * width , self.pos[1] + i * height, width, height))
                 else:
                     pygame.draw.rect(screen, pygame.Color("Gray"), (self.pos[0] + j * width , self.pos[1] + i * height, width, height))
+        pygame.draw.rect(screen, pygame.Color("Blue"),
+                         (self.pos[0] + abs(self.startCell.x - self.chrc1.collider.x + 40) / CELL_SIZE[0] * width, self.pos[1] + abs(self.startCell.y - self.chrc1.collider.y + 30) / CELL_SIZE[1] * height, width, height))
+        pygame.draw.rect(screen, (162, 141, 37),
+                         (self.pos[0] + abs(self.startCell.x - self.chrc2.collider.x + 40) / CELL_SIZE[0] * width,
+                          self.pos[1] + abs(self.startCell.y - self.chrc2.collider.y + 30) / CELL_SIZE[1] * height,
+                          width, height))
 
     def hide(self, hide):
         self.hideable = hide

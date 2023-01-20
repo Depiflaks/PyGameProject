@@ -26,13 +26,15 @@ class Level:
                                 CENTER_LEFT, 1500)
         self.board_right = Board(f'{directory}/l.csv', ((WINDOW_W - CELL_SIZE[0]) // 2, 0),
                                  (WINDOW_W + CELL_SIZE[0]) // 2 + CELL_SIZE[0], CENTER_RIGHT, 1500)
-        self.map = Minimap(f'{directory}/l.csv', MINIMAP_SIZE, (WINDOW_W - MINIMAP_SIZE[0], 0))
 
         self.spawnPositions = [list(map(int, el.split())) for el in
                                open(f"../resources/levels/{directory}/chr.csv").read().strip().split("\n")]
 
         self.chrc_1_center = Chrc(player_data1, *self.spawnPositions[0], self.board_center, 1)
         self.chrc_2_center = Chrc(player_data2, *self.spawnPositions[1], self.board_center, 2)
+
+        self.map = Minimap(f'{directory}/l.csv', MINIMAP_SIZE, (WINDOW_W - MINIMAP_SIZE[0], 0), self.chrc_1_center,
+                           self.chrc_2_center, self.board_center.field[0][0])
 
         self.chrc_1_left = Chrc(player_data1, *self.spawnPositions[0], self.board_left, 1)
 
@@ -119,16 +121,17 @@ class LevelManager:
         self.currentLevel = 0
         self.screen = screen
         self.drawIntro()
-        self.level = Level(self.levels[self.currentLevel], self.screen)
+        self.startLoad()
 
     def next(self, flag):
         if not flag:
             return
         self.currentLevel += 1
         if (len(self.levels) > self.currentLevel):
-            self.level = Level(self.levels[self.currentLevel], self.screen)
+            self.startLoad()
         else:
-            print("Вы победили!")
+            end.indicator = True
+            end.appendLevelManager(self)
 
     def drawIntro(self):
         self.screen.blit(intro[self.index], (0, 0))
@@ -137,4 +140,7 @@ class LevelManager:
         clock.tick(6)
         if self.index < len(intro):
             self.drawIntro()
+
+    def startLoad(self):
+        self.level = Level(self.levels[self.currentLevel], self.screen)
 

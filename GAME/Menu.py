@@ -50,10 +50,16 @@ class Menu(pygame.sprite.Group):
         return False
 
 class End(pygame.sprite.Group):
-    def __init__(self, screen):
+    def __init__(self, screen, menu, indicator):
         super().__init__()
+        self.add_frame = 0
         self.screen = screen
+        self.menu = menu
+        self.indicator = indicator
         self.draw_obj()
+
+    def appendLevelManager(self, levelManager):
+        self.levelManager = levelManager
 
     def draw_obj(self):
         self.bcgr = pygame.sprite.Sprite(self)
@@ -62,7 +68,7 @@ class End(pygame.sprite.Group):
         self.bcgr.x, self.bcgr.y = 0, 0
         self.m_x, self.m_y = 0, 0
         x = CENTER[0] - BUTTON_SIZE[0] // 2
-        self.continue_button = Button(self, self.screen, load_image(f'menu/cont.jpg'), 2, x, 450, 400, 100)
+        self.continue_button = Button(self, self.screen, load_image(f'menu/cont.jpg'), 2, x, 700, 400, 100)
 
 
     def update_forms(self, event):
@@ -71,12 +77,15 @@ class End(pygame.sprite.Group):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.continue_button.rect.collidepoint(event.pos[0], event.pos[1]):
                 # здесь снова должна вызваться менюшка
-                pass
+                self.menu.indicator = True
+                self.indicator = False
+                self.levelManager.currentLevel = 0
+                self.levelManager.startLoad()
         for i in filter(lambda n: n.__class__ == Button, self.sprites()):
             if i.rect.collidepoint(self.m_x, self.m_y):
-                i.image = i.frames[1 + (self.add_frame if i == self.val_button else 0)]
+                i.image = i.frames[1 + (self.add_frame if i == self.continue_button else 0)]
             else:
-                i.image = i.frames[0 + (self.add_frame if i == self.val_button else 0)]
+                i.image = i.frames[0 + (self.add_frame if i == self.continue_button else 0)]
         return False
 
 

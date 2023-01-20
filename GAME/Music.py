@@ -1,3 +1,4 @@
+import pygame
 from pygame import mixer
 
 class MusicManager:
@@ -37,3 +38,6 @@ class MusicManager:
             mixer.music.pause()
         else:
             mixer.music.unpause()
+
+
+pygame.init()
