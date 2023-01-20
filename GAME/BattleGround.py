@@ -23,6 +23,7 @@ class Board(pygame.sprite.LayeredUpdates):
         self.offset = offset
         self.width = width
         self.players_list = []
+        self.ends = []
         # отерываем csv файл, в котором описан уровень
         with open(f'''../resources/levels/{file}''', encoding='utf8', mode='r') as csvfile:
             reader = list(list(map(lambda n: int(n) if n != '' else 0, i))
@@ -36,6 +37,10 @@ class Board(pygame.sprite.LayeredUpdates):
                 # self.field - двумерный список, в котором записаны все ячейки класса cells
                 # сделано, чтобы можно было быстрее обращаться и ориентироваться
                 self.field[i].append(Cell(self, reader[i][j], j * CELL_SIZE[0] + pos[0], i * CELL_SIZE[1] + pos[1]))
+        for i in range(len(self.field)):
+            for j in range(len(self.field[0])):
+                if self.field[i][j].ID == 5:
+                    self.ends.append((i, j))
         self.drawWalls()
 
     # процедура которая, после прорисовки пола, рисует стены

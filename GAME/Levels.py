@@ -34,7 +34,7 @@ class Level:
         self.chrc_2_center = Chrc(player_data2, *self.spawnPositions[1], self.board_center, 2)
 
         self.map = Minimap(f'{directory}/l.csv', MINIMAP_SIZE, (WINDOW_W - MINIMAP_SIZE[0], 0), self.chrc_1_center,
-                           self.chrc_2_center, self.board_center.field[0][0])
+                           self.chrc_2_center, self.board_center.field[0][0], self.board_center.ends)
 
         self.chrc_1_left = Chrc(player_data1, *self.spawnPositions[0], self.board_left, 1)
 
